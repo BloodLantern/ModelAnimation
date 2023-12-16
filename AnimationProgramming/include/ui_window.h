@@ -14,18 +14,20 @@ private:
 	int32_t m_WindowY;
 
 	Skeleton* m_Skeleton;
+	Bone* m_SelectedBone;
 
 	void Main();
 	void StartThread();
 	void EndThread();
 
-	void DrawBone(const Bone& bone) const;
+	void DrawBoneInSkeletonHierarchy(Bone& bone);
+	void DrawCurrentBoneInfo() const;
 
 public:
 	UiWindow();
 	~UiWindow();
 
-	void DrawSkeletonHierarchy() const;
+	void DrawSkeletonHierarchy();
 	void SetSkeleton(Skeleton* skeleton);
 
 	void* operator new(size_t count) = delete;

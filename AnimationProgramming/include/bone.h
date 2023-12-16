@@ -3,6 +3,9 @@
 #include <vector>
 #include <string>
 
+#include "maths/vector3.hpp"
+#include "maths/quaternion.hpp"
+
 class Bone
 {
 private:
@@ -12,7 +15,12 @@ private:
 	std::string m_Name;
 
 public:
+	Vector3 Position;
+	Quaternion Rotation;
+
+	Bone();
 	Bone(const std::string& name);
+	Bone(const std::string& name, const Vector3& position, const Quaternion& rotation);
 
 	void SetFamily(Bone* parent, std::vector<Bone*>& children);
 	void SetParent(Bone* parent);

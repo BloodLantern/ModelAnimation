@@ -13,7 +13,7 @@ public:
 	void AddBone(const Bone bone, const size_t index);
 	void AddBone(const Bone bone);
 
-	_NODISCARD const Bone& GetRoot() const;
+	_NODISCARD Bone& GetRoot();
 
 	void SetupFamily();
 };

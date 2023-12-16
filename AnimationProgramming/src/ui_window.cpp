@@ -61,7 +61,7 @@ void UiWindow::Main()
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;     // Enable Docking
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;   // Enable viewports
-
+	
 	io.Fonts->AddFontDefault();
 
 	ImGui::StyleColorsDark();
@@ -83,6 +83,7 @@ void UiWindow::Main()
 		ImGui::NewFrame();
 
 		DrawSkeletonHierarchy();
+		DrawCurrentBoneInfo();
 
 		// Rendering
 		ImGui::Render();
@@ -127,26 +128,44 @@ void UiWindow::EndThread()
 
 
 
-void UiWindow::DrawBone(const Bone& bone) const
+void UiWindow::DrawBoneInSkeletonHierarchy(Bone& bone)
 {
-	for (const Bone* const bone : bone.GetChildren())
+	for (Bone* const bone : bone.GetChildren())
 	{
-		if (ImGui::TreeNode(bone->GetName().c_str()))
+		if (ImGui::TreeNodeEx(bone->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow))
 		{
-			DrawBone(*bone);
+			if (ImGui::IsItemClicked())
+				m_SelectedBone = bone;
+
+			DrawBoneInSkeletonHierarchy(*bone);
 			ImGui::TreePop();
 		}
 	}
 }
 
-void UiWindow::DrawSkeletonHierarchy() const
+void UiWindow::DrawCurrentBoneInfo() const
+{
+	if (!m_SelectedBone)
+		return;
+
+	ImGui::Begin("Current bone");
+
+	ImGui::BeginDisabled();
+	ImGui::InputFloat3("Position", &m_SelectedBone->Position.x);
+	ImGui::InputFloat4("Rotation", &m_SelectedBone->Rotation.imaginary.x);
+	ImGui::EndDisabled();
+
+	ImGui::End();
+}
+
+void UiWindow::DrawSkeletonHierarchy()
 {
 	if (!m_Skeleton)
 		return;
 
 	ImGui::Begin("Skeleton");
 
-	DrawBone(m_Skeleton->GetRoot());
+	DrawBoneInSkeletonHierarchy(m_Skeleton->GetRoot());
 
 	ImGui::End();
 }

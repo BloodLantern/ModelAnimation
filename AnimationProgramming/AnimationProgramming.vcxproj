@@ -19,6 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="externals\include\maths\calc.cpp" />
+    <ClCompile Include="externals\include\maths\matrix2x2.cpp" />
+    <ClCompile Include="externals\include\maths\matrix3x3.cpp" />
+    <ClCompile Include="externals\include\maths\matrix4x4.cpp" />
+    <ClCompile Include="externals\include\maths\quaternion.cpp" />
+    <ClCompile Include="externals\include\maths\vector.cpp" />
+    <ClCompile Include="externals\include\maths\vector2.cpp" />
+    <ClCompile Include="externals\include\maths\vector2i.cpp" />
+    <ClCompile Include="externals\include\maths\vector3.cpp" />
+    <ClCompile Include="externals\include\maths\vector4.cpp" />
     <ClCompile Include="src\bone.cpp" />
     <ClCompile Include="externals\include\ImGui\imgui.cpp" />
     <ClCompile Include="externals\include\ImGui\imgui_demo.cpp" />
@@ -33,6 +43,17 @@
     <ClCompile Include="src\ui_window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="externals\include\maths\calc.hpp" />
+    <ClInclude Include="externals\include\maths\matrix.hpp" />
+    <ClInclude Include="externals\include\maths\matrix2x2.hpp" />
+    <ClInclude Include="externals\include\maths\matrix3x3.hpp" />
+    <ClInclude Include="externals\include\maths\matrix4x4.hpp" />
+    <ClInclude Include="externals\include\maths\quaternion.hpp" />
+    <ClInclude Include="externals\include\maths\vector.hpp" />
+    <ClInclude Include="externals\include\maths\vector2.hpp" />
+    <ClInclude Include="externals\include\maths\vector2i.hpp" />
+    <ClInclude Include="externals\include\maths\vector3.hpp" />
+    <ClInclude Include="externals\include\maths\vector4.hpp" />
     <ClInclude Include="include\bone.h" />
     <ClInclude Include="externals\include\ImGui\imconfig.h" />
     <ClInclude Include="externals\include\ImGui\imgui.h" />
@@ -123,6 +144,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\externals\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -156,6 +178,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\externals\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

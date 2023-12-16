@@ -22,7 +22,7 @@ void Skeleton::AddBone(const Bone bone)
 	m_Bones.push_back(bone);
 }
 
-_NODISCARD const Bone& Skeleton::GetRoot() const
+_NODISCARD Bone& Skeleton::GetRoot()
 {
 	assert(m_Bones.size() != 0 && "Skeleton has no bones");
 	__assume(m_Bones.size() != 0);

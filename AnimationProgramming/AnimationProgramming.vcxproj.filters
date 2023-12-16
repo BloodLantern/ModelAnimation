@@ -51,6 +51,36 @@
     <ClCompile Include="src\bone.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="externals\include\maths\calc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\include\maths\matrix2x2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\include\maths\matrix3x3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\include\maths\matrix4x4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\include\maths\quaternion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\include\maths\vector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\include\maths\vector2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\include\maths\vector2i.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\include\maths\vector3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\include\maths\vector4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Engine.h">
@@ -102,6 +132,39 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\bone.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\include\maths\calc.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\include\maths\matrix.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\include\maths\matrix2x2.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\include\maths\matrix3x3.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\include\maths\matrix4x4.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\include\maths\quaternion.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\include\maths\vector.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\include\maths\vector2.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\include\maths\vector2i.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\include\maths\vector3.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\include\maths\vector4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

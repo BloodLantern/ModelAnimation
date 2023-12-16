@@ -22,6 +22,12 @@
 class CSimulation : public ISimulation
 {
 private:
+	static void GetSkeletonBoneLocalBindTransform(int boneIndex, Vector3& p, Quaternion& r)
+	{
+		::GetSkeletonBoneLocalBindTransform(boneIndex, p.x, p.y, p.z, r.real, r.imaginary.x, r.imaginary.y, r.imaginary.z);
+	}
+
+private:
 	UiWindow m_UiWindow;
 	Skeleton m_Skeleton;
 
@@ -32,9 +38,10 @@ private:
 
 		for (size_t i = 0; i < boneCount; i++)
 		{
-			const char* const name = GetSkeletonBoneName(i);
+			Bone bone(GetSkeletonBoneName(i));
 
-			Bone bone(name);
+			GetSkeletonBoneLocalBindTransform(i, bone.Position, bone.Rotation);
+
 			m_Skeleton.AddBone(bone);
 		}
 
