@@ -39,10 +39,10 @@ public:
 
 	/// @brief Returns the length of the vector.
 	[[nodiscard]]
-	float Length() const;
+	float Norm() const;
 	/// @brief Returns the squared length of the vector.
 	[[nodiscard]]
-	float SquaredLength() const;
+	float SquaredNorm() const;
 	/// @brief Normalizes the vector.
 	/// @return A vector with the same direction but a length of one.
 	[[nodiscard]]

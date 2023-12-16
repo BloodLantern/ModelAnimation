@@ -10,24 +10,24 @@ Vector3::Vector3(const Vector3& p1, const Vector3& p2)
 }
 
 #pragma region functions
-float Vector3::Length() const
+float Vector3::Norm() const
 {
-	return sqrt(SquaredLength());
+	return sqrt(SquaredNorm());
 }
 
-float Vector3::SquaredLength() const
+float Vector3::SquaredNorm() const
 {
 	return x * x + y * y + z * z;
 }
 
 Vector3 Vector3::Normalized() const
 {
-	float length = Length();
-	if (length == 0.f)
-		return 0.f;
+	float norm = Norm();
+	if (norm == 0)
+		return 0;
 
-    __assume(length != 0.f);
-	return Vector3(x / length, y / length, z / length);
+    __assume(norm != 0.f);
+	return Vector3(x / norm, y / norm, z / norm);
 }
 
 float Vector3::Dot(const Vector3& other) const
@@ -62,7 +62,7 @@ Vector3 Vector3::Rotate(const float cos, const float sin, const Vector3& axis, c
 
 float Vector3::Angle(const Vector3& a, const Vector3& b)
 {
-	return std::acos(Dot(a, b) / (a.Length() * b.Length()));
+	return std::acos(Dot(a, b) / (a.Norm() * b.Norm()));
 }
 
 float Vector3::Dot(const Vector3& a, const Vector3& b)
