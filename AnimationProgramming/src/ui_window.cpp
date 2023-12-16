@@ -14,6 +14,13 @@ UiWindow::UiWindow()
 	StartThread();
 }
 
+UiWindow::~UiWindow()
+{
+	// Called when the main window is closed, forcefully close the UI window and join the thread
+	m_CloseWindow = true;
+	EndThread();
+}
+
 void UiWindow::Main()
 {
 	// Setup GLFW
@@ -33,12 +40,14 @@ void UiWindow::Main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	glfwWindowHint(GLFW_SAMPLES, 8);
 	glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-	//glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, true);
 
 	GLFWwindow* window = glfwCreateWindow(1400, 800, "UI", NULL, NULL);
 
 	if (window == NULL)
 		return;
+
+	// Disable closing the Ui window
+	glfwSetWindowCloseCallback(window, [](GLFWwindow* w) { glfwSetWindowShouldClose(w, GLFW_FALSE); });
 
 	// Set icon
 	glfwMakeContextCurrent(window);
@@ -62,26 +71,24 @@ void UiWindow::Main()
 	// Show window
 	glfwShowWindow(window);
 
-	while (!glfwWindowShouldClose(window))
+	while (!glfwWindowShouldClose(window) && !m_CloseWindow)
 	{
 		glfwPollEvents();
 
-		// glfwGetWindowPos(window, &Globals::gWindowX, &Globals::gWindowY);
-		// glfwGetWindowSize(window, &Globals::gWindowWidth, &Globals::gWindowHeight);
+		glfwGetWindowPos(window, &m_WindowX, &m_WindowY);
 
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		ImGui::Begin("hello");
-		ImGui::End();
+		DrawSkeletonHierarchy();
 
 		// Rendering
 		ImGui::Render();
-		int display_w, display_h;
-		glfwGetFramebufferSize(window, &display_w, &display_h);
-		glViewport(0, 0, display_w, display_h);
+		int displayW, displayH;
+		glfwGetFramebufferSize(window, &displayW, &displayH);
+		glViewport(0, 0, displayW, displayH);
 
 		glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -107,10 +114,44 @@ void UiWindow::Main()
 
 void UiWindow::StartThread()
 {
+	m_CloseWindow = false;
 	m_Thread = std::thread(&UiWindow::Main, this);
 }
 
-std::thread& UiWindow::GetThread()
+void UiWindow::EndThread()
 {
-	return m_Thread;
+	if (m_Thread.joinable())
+		m_Thread.join();
+}
+
+
+
+
+void UiWindow::DrawBone(const Bone& bone) const
+{
+	for (const Bone* const bone : bone.GetChildren())
+	{
+		if (ImGui::TreeNode(bone->GetName().c_str()))
+		{
+			DrawBone(*bone);
+			ImGui::TreePop();
+		}
+	}
+}
+
+void UiWindow::DrawSkeletonHierarchy() const
+{
+	if (!m_Skeleton)
+		return;
+
+	ImGui::Begin("Skeleton");
+
+	DrawBone(m_Skeleton->GetRoot());
+
+	ImGui::End();
+}
+
+void UiWindow::SetSkeleton(Skeleton* skeleton)
+{
+	m_Skeleton = skeleton;
 }

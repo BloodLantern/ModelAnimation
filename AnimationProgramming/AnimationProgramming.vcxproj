@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\bone.cpp" />
     <ClCompile Include="externals\include\ImGui\imgui.cpp" />
     <ClCompile Include="externals\include\ImGui\imgui_demo.cpp" />
     <ClCompile Include="externals\include\ImGui\imgui_draw.cpp" />
@@ -26,11 +27,13 @@
     <ClCompile Include="externals\include\ImGui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="externals\include\ImGui\imgui_tables.cpp" />
     <ClCompile Include="externals\include\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="src\skeleton.cpp" />
     <ClCompile Include="src\AnimationProgramming.cpp" />
     <ClCompile Include="src\stdafx.cpp" />
     <ClCompile Include="src\ui_window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\bone.h" />
     <ClInclude Include="externals\include\ImGui\imconfig.h" />
     <ClInclude Include="externals\include\ImGui\imgui.h" />
     <ClInclude Include="externals\include\ImGui\imgui_impl_glfw.h" />
@@ -46,6 +49,7 @@
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\targetver.h" />
     <ClInclude Include="include\ui_window.h" />
+    <ClInclude Include="include\skeleton.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{551567FE-4862-404E-8E15-7C2E35823078}</ProjectGuid>
