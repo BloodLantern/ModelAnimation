@@ -20,6 +20,7 @@
 *.dylib
 *.dll
 !AnimationProgramming/externals/libs/*.dll
+!Data/*.dll
 
 # Fortran module files
 *.mod
@@ -31,6 +32,7 @@
 *.a
 *.lib
 !AnimationProgramming/externals/libs/*.lib
+!Data/*.lib
 
 # Executables
 *.exe

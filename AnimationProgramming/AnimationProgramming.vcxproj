@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="externals\include\glad\glad.c" />
     <ClCompile Include="externals\include\ImGui\imgui.cpp" />
     <ClCompile Include="externals\include\ImGui\imgui_demo.cpp" />
     <ClCompile Include="externals\include\ImGui\imgui_draw.cpp" />
@@ -27,18 +26,11 @@
     <ClCompile Include="externals\include\ImGui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="externals\include\ImGui\imgui_tables.cpp" />
     <ClCompile Include="externals\include\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="src\AnimationProgramming.cpp">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\include;$(ProjectDir)\externals;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-    <ClCompile Include="src\stdafx.cpp">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\include;$(ProjectDir)\externals;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
+    <ClCompile Include="src\AnimationProgramming.cpp" />
+    <ClCompile Include="src\stdafx.cpp" />
+    <ClCompile Include="src\ui_window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="externals\include\glad\glad\glad.h" />
-    <ClInclude Include="externals\include\glad\KHR\khrplatform.h" />
-    <ClInclude Include="externals\include\GLFW\glfw3.h" />
-    <ClInclude Include="externals\include\GLFW\glfw3native.h" />
     <ClInclude Include="externals\include\ImGui\imconfig.h" />
     <ClInclude Include="externals\include\ImGui\imgui.h" />
     <ClInclude Include="externals\include\ImGui\imgui_impl_glfw.h" />
@@ -49,6 +41,11 @@
     <ClInclude Include="externals\include\ImGui\imstb_textedit.h" />
     <ClInclude Include="externals\include\ImGui\imstb_truetype.h" />
     <ClInclude Include="externals\include\stb_image.h" />
+    <ClInclude Include="include\Engine.h" />
+    <ClInclude Include="include\Simulation.h" />
+    <ClInclude Include="include\stdafx.h" />
+    <ClInclude Include="include\targetver.h" />
+    <ClInclude Include="include\ui_window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{551567FE-4862-404E-8E15-7C2E35823078}</ProjectGuid>
@@ -127,11 +124,8 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../Data;$(ProjectDir)\externals\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;Engine.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <ProjectReference>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -158,7 +152,6 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)\include;$(ProjectDir)\externals\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -166,11 +159,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../Data;$(ProjectDir)\externals\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;Engine.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Engine.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <ProjectReference>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

@@ -21,7 +21,7 @@
     <ClCompile Include="src\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="externals\include\glad\glad.c">
+    <ClCompile Include="src\ui_window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="externals\include\ImGui\imgui.cpp">
@@ -47,16 +47,19 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="externals\include\glad\glad\glad.h">
+    <ClInclude Include="include\Engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="externals\include\glad\KHR\khrplatform.h">
+    <ClInclude Include="include\Simulation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="externals\include\GLFW\glfw3.h">
+    <ClInclude Include="include\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="externals\include\GLFW\glfw3native.h">
+    <ClInclude Include="include\targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ui_window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="externals\include\ImGui\imconfig.h">
