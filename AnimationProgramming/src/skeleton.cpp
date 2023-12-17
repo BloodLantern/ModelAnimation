@@ -11,28 +11,28 @@ void Skeleton::Reserve(const size_t nbr)
 	m_Bones.reserve(nbr);
 }
 
-void Skeleton::AddBone(const Bone bone, const size_t index)
+void Skeleton::AddBone(const Bone& bone, const size_t index)
 {
-	assert(index >= 0 && index < m_Bones.size() && "Bone index out of range");
-	__assume(index >= 0 && index < m_Bones.size());
+	assert(index < m_Bones.size() && "Bone index out of range");
+	__assume(index < m_Bones.size());
 
 	m_Bones[index] = bone;
 }
 
-void Skeleton::AddBone(const Bone bone)
+void Skeleton::AddBone(const Bone& bone)
 {
 	m_Bones.push_back(bone);
 }
 
 _NODISCARD Bone& Skeleton::GetRoot()
 {
-	assert(m_Bones.size() != 0 && "Skeleton has no bones");
-	__assume(m_Bones.size() != 0);
+	assert(!m_Bones.empty() && "Skeleton has no bones");
+	__assume(!m_Bones.empty());
 
 	return m_Bones[0];
 }
 
-const size_t Skeleton::GetBoneCount() const
+size_t Skeleton::GetBoneCount() const
 {
 	return m_Bones.size();
 }
@@ -41,7 +41,7 @@ void Skeleton::SetupFamily()
 {
 	for (size_t i = 0; i < m_Bones.size(); i++)
 	{
-		const size_t parentId = GetSkeletonBoneParentIndex(i);
+		const int parentId = GetSkeletonBoneParentIndex(i);
 
 		if (parentId == -1)
 			continue;
@@ -60,11 +60,11 @@ void Skeleton::Draw()
 
 void Skeleton::Draw_Recursive(Bone& bone, const Vector3& parentPos, const Matrix4x4& parentTrs)
 {
-	Matrix4x4 trs = parentTrs * bone.GetLocalTransform();
-	Vector4 v = Vector4(0.f, 0.f, 0.f, 1.f);
+	const Matrix4x4 trs = parentTrs * bone.GetLocalTransform();
+	constexpr Vector4 v(0.f, 0.f, 0.f, 1.f);
 	
-	Vector4 p = trs * v;
-	Vector3 position = Vector3(p.x, p.y, p.z);
+	const Vector4 p = trs * v;
+	const Vector3 position = Vector3(p.x, p.y, p.z);
 
 	EngineExt::DrawLine(parentPos, position, Vector3(0.f));
 	for (Bone* b : bone.GetChildren())

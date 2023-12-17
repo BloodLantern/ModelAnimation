@@ -30,8 +30,8 @@ public:
 
 	Animation(const std::string& name, const size_t keyCount, const Skeleton& skeleton);
 
-	_NODISCARD const size_t GetKeyCount() const;
-	_NODISCARD const size_t GetBoneCount() const;
+	_NODISCARD size_t GetKeyCount() const;
+	_NODISCARD size_t GetBoneCount() const;
 	_NODISCARD const std::string& GetName() const;
 	_NODISCARD const KeyFrame& GetKeyFrame(const size_t frame, const size_t boneIndex) const;
 

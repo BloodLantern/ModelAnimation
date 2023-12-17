@@ -11,12 +11,12 @@ private:
 	void Draw_Recursive(Bone& bone, const Vector3& parentPos, const Matrix4x4& parentTrs);
 
 public:
-	void Reserve(const size_t nbr);
-	void AddBone(const Bone bone, const size_t index);
-	void AddBone(const Bone bone);
+	void Reserve(size_t nbr);
+	void AddBone(const Bone& bone, size_t index);
+	void AddBone(const Bone& bone);
 
 	_NODISCARD Bone& GetRoot();
-	_NODISCARD const size_t GetBoneCount() const;
+	_NODISCARD size_t GetBoneCount() const;
 
 	void SetupFamily();
 

@@ -30,7 +30,7 @@ private:
 
 	void LoadSkeleton()
 	{
-		size_t boneCount = GetSkeletonBoneCount() - 4;
+		const size_t boneCount = GetSkeletonBoneCount() - 4;
 		m_Skeleton.Reserve(boneCount);
 
 		for (size_t i = 0; i < boneCount; i++)

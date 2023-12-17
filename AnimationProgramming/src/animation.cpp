@@ -11,12 +11,12 @@ Animation::Animation(const std::string& name, const size_t keyCount, const Skele
 	}
 }
 
-const size_t Animation::GetKeyCount() const
+size_t Animation::GetKeyCount() const
 {
 	return m_KeyCount;
 }
 
-const size_t Animation::GetBoneCount() const
+size_t Animation::GetBoneCount() const
 {
 	return m_Skeleton.GetBoneCount();
 }
