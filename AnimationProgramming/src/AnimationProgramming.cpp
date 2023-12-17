@@ -19,6 +19,8 @@ private:
 	Skeleton m_Skeleton;
 	std::vector<Animation> m_Animations;
 
+	size_t m_CurrentAnimation;
+
 	void LoadSkeleton()
 	{
 		const size_t boneCount = GetSkeletonBoneCount() - 4;
@@ -32,7 +34,7 @@ private:
 			EngineExt::GetSkeletonBoneLocalBindTransform(index, bone.Position, bone.Rotation);
 			bone.ComputeTransform();
 
-			m_Skeleton.AddBone(bone);
+			m_Skeleton.AddBone(bone, i);
 		}
 
 		m_Skeleton.SetupFamily();
@@ -67,6 +69,7 @@ private:
 		LoadAnimation("ThirdPersonRun.anim");
 
 		m_UiWindow.SetAnimations(&m_Animations);
+		m_UiWindow.SetCurrentAnimation(&m_CurrentAnimation);
 	}
 
 	virtual void Update(float frameTime) override
@@ -81,6 +84,7 @@ private:
 		DrawLine(0, 0, 0, 0, 0, 100, 0, 0, 1);
 
 		m_Skeleton.Draw();
+		m_Animations[m_CurrentAnimation].Animate(frameTime);
 	}
 };
 

@@ -18,6 +18,7 @@ private:
 	Bone* m_SelectedBone;
 
 	std::vector<Animation>* m_Animations;
+	size_t* m_CurrentAnimation;
 
 	void Main();
 	void StartThread();
@@ -34,6 +35,7 @@ public:
 
 	void SetSkeleton(Skeleton* skeleton);
 	void SetAnimations(std::vector<Animation>* animations);
+	void SetCurrentAnimation(size_t* currAnim);
 
 	void* operator new(size_t count) = delete;
 	void operator delete(void* ptr) = delete;

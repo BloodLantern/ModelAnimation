@@ -17,6 +17,7 @@ public:
 
 	_NODISCARD Bone& GetRoot();
 	_NODISCARD size_t GetBoneCount() const;
+	_NODISCARD const Bone& GetBone(const size_t id) const;
 
 	void SetupFamily();
 

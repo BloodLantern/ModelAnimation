@@ -38,5 +38,6 @@ public:
 	_NODISCARD std::vector<Bone*>& GetChildren();
 	_NODISCARD const std::string& GetName() const;
 	_NODISCARD Matrix4x4& GetLocalTransform();
-	_NODISCARD Matrix4x4& GetGlobalTransform();
+	_NODISCARD const Matrix4x4& GetGlobalTransform() const;
+	_NODISCARD const Matrix4x4& GetGlobalInvTransform() const;
 };

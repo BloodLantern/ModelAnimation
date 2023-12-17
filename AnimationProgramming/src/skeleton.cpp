@@ -8,7 +8,7 @@
 void Skeleton::Reserve(const size_t nbr)
 {
 	m_Bones.clear();
-	m_Bones.reserve(nbr);
+	m_Bones.resize(nbr);
 }
 
 void Skeleton::AddBone(const Bone& bone, const size_t index)
@@ -35,6 +35,11 @@ _NODISCARD Bone& Skeleton::GetRoot()
 size_t Skeleton::GetBoneCount() const
 {
 	return m_Bones.size();
+}
+
+const Bone& Skeleton::GetBone(const size_t id) const
+{
+	return m_Bones[id];
 }
 
 void Skeleton::SetupFamily()

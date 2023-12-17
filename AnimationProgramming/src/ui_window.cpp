@@ -46,10 +46,6 @@ void UiWindow::Main()
 	if (window == NULL)
 		return;
 
-	// Disable closing the Ui window
-	glfwSetWindowCloseCallback(window, [](GLFWwindow* w) { glfwSetWindowShouldClose(w, GLFW_FALSE); });
-
-	// Set icon
 	glfwMakeContextCurrent(window);
 
 	glfwSwapInterval(1); // Enable vsync
@@ -166,10 +162,10 @@ void UiWindow::DrawCurrentBoneInfo() const
 	ImGui::InputFloat4("Local row 4", &m_SelectedBone->GetLocalTransform()[3].x);
 
 	ImGui::Dummy(ImVec2(10.f, 25.f));
-	ImGui::InputFloat4("Global row 1", &m_SelectedBone->GetGlobalTransform()[0].x);
-	ImGui::InputFloat4("Global row 2", &m_SelectedBone->GetGlobalTransform()[1].x);
-	ImGui::InputFloat4("Global row 3", &m_SelectedBone->GetGlobalTransform()[2].x);
-	ImGui::InputFloat4("Global row 4", &m_SelectedBone->GetGlobalTransform()[3].x);
+	ImGui::InputFloat4("Global row 1", &const_cast<Matrix4x4&>(m_SelectedBone->GetGlobalTransform())[0].x);
+	ImGui::InputFloat4("Global row 2", &const_cast<Matrix4x4&>(m_SelectedBone->GetGlobalTransform())[1].x);
+	ImGui::InputFloat4("Global row 3", &const_cast<Matrix4x4&>(m_SelectedBone->GetGlobalTransform())[2].x);
+	ImGui::InputFloat4("Global row 4", &const_cast<Matrix4x4&>(m_SelectedBone->GetGlobalTransform())[3].x);
 	ImGui::EndDisabled();
 
 	ImGui::End();
@@ -181,14 +177,18 @@ void UiWindow::DrawAnimations()
 		return;
 
 	ImGui::Begin("Animations");
+	ImGui::SliderInt("Current animation", (int*)m_CurrentAnimation, 0, m_Animations->size() - 1);
 
-	for (const Animation& a : *m_Animations)
+	for (Animation& a : *m_Animations)
 	{
 		if (!ImGui::CollapsingHeader(a.GetName().c_str()))
 			continue;
 
 		const size_t keyCount = a.GetKeyCount();
 		ImGui::Text("Key count : %d", keyCount);
+		ImGui::SliderInt("Current frame", (int*)&a.CurrentFrame, 0, keyCount);
+		ImGui::Checkbox("Paused", &a.Paused);
+		ImGui::InputFloat("Delta modulation", &a.DeltaModulation, 0.1f, 1.f);
 
 		for (size_t i = 0; i < keyCount; i++)
 		{
@@ -240,4 +240,9 @@ void UiWindow::SetSkeleton(Skeleton* skeleton)
 void UiWindow::SetAnimations(std::vector<Animation>* animations)
 {
 	m_Animations = animations;
+}
+
+void UiWindow::SetCurrentAnimation(size_t* currAnim)
+{
+	m_CurrentAnimation = currAnim;
 }

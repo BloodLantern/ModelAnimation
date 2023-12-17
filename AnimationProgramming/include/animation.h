@@ -12,8 +12,13 @@ private:
 	const Skeleton& m_Skeleton;
 
 	std::vector<std::vector<KeyFrame>> m_KeyFrames;
+	float m_Time;
 
 public:
+	size_t CurrentFrame;
+	bool Paused;
+	float DeltaModulation;
+
 	Animation(std::string&& name, const size_t keyCount, const Skeleton& skeleton);
 
 	_NODISCARD size_t GetKeyCount() const;
@@ -23,5 +28,5 @@ public:
 
 	void AddKeyFrame(const size_t frame, const size_t boneIndex, const Vector3& position, const Quaternion& rotation);
 
-	void Animate();
+	void Animate(const float deltaTime);
 };

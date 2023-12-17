@@ -69,7 +69,12 @@ Matrix4x4& Bone::GetLocalTransform()
 	return m_LocalTrs;
 }
 
-Matrix4x4& Bone::GetGlobalTransform()
+const Matrix4x4& Bone::GetGlobalTransform() const
 {
 	return m_GlobalTrs;
+}
+
+const Matrix4x4& Bone::GetGlobalInvTransform() const
+{
+	return m_GlobalInvTrs;
 }

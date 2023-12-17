@@ -18,4 +18,5 @@ public:
 
 	_NODISCARD const Vector3& GetPosition() const;
 	_NODISCARD const Quaternion& GetRotation() const;
+	_NODISCARD const Matrix4x4& GetTransform() const;
 };

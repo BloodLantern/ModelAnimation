@@ -14,3 +14,8 @@ void EngineExt::GetAnimLocalBoneTransform(const Animation& anim, const int boneI
 {
 	::GetAnimLocalBoneTransform(anim.GetName().c_str(), boneIndex, keyFrameIndex, p.x, p.y, p.z, r.real, r.imaginary.x, r.imaginary.y, r.imaginary.z);
 }
+
+void EngineExt::SetSkinningPose(const std::vector<Matrix4x4>& matrices)
+{
+	::SetSkinningPose(&matrices[0][0].x, matrices.size());
+}

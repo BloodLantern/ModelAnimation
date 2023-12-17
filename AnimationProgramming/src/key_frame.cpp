@@ -21,3 +21,8 @@ const Quaternion& KeyFrame::GetRotation() const
 {
 	return m_Rotation;
 }
+
+const Matrix4x4& KeyFrame::GetTransform() const
+{
+	return m_LocalTrs;
+}
