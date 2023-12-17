@@ -1,19 +1,10 @@
 // AnimationProgramming.cpp : Defines the entry point for the console application.
 //
 
-#include "stdafx.h"
-
 #include "Engine.h"
 #include "Simulation.h"
 
-#include <iostream>
 #include <thread>
-
-#include "GLFW/glfw3.h"
-
-#include "ImGui/imgui.h"
-#include "ImGui/imgui_impl_glfw.h"
-#include "ImGui/imgui_impl_opengl3.h"
 
 #include "ui_window.h"
 #include "skeleton.h"
@@ -35,9 +26,10 @@ private:
 
 		for (size_t i = 0; i < boneCount; i++)
 		{
-			Bone bone(GetSkeletonBoneName(i));
+			const int index = (int) i;
+			Bone bone(GetSkeletonBoneName(index));
 
-			EngineExt::GetSkeletonBoneLocalBindTransform(i, bone.Position, bone.Rotation);
+			EngineExt::GetSkeletonBoneLocalBindTransform(index, bone.Position, bone.Rotation);
 			bone.ComputeTransform();
 
 			m_Skeleton.AddBone(bone);
@@ -47,9 +39,9 @@ private:
 		m_UiWindow.SetSkeleton(&m_Skeleton);
 	}
 
-	void LoadAnimation(const std::string& name)
+	void LoadAnimation(std::string&& name)
 	{
-		Animation anim = Animation(name, GetAnimKeyCount(name.c_str()), m_Skeleton);
+		Animation anim(std::move(name), GetAnimKeyCount(name.c_str()), m_Skeleton);
 
 		for (size_t i = 0; i < anim.GetKeyCount(); i++)
 		{
@@ -57,7 +49,7 @@ private:
 			{
 				Vector3 p;
 				Quaternion r;
-				EngineExt::GetAnimLocalBoneTransform(anim, j, i, p, r);
+				EngineExt::GetAnimLocalBoneTransform(anim, (int) j, (int) i, p, r);
 
 				anim.AddKeyFrame(i, j, p, r);
 

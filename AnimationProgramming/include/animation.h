@@ -28,7 +28,7 @@ public:
 		{}
 	};
 
-	Animation(const std::string& name, const size_t keyCount, const Skeleton& skeleton);
+	Animation(std::string&& name, const size_t keyCount, const Skeleton& skeleton);
 
 	_NODISCARD size_t GetKeyCount() const;
 	_NODISCARD size_t GetBoneCount() const;

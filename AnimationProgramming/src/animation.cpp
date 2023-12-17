@@ -1,7 +1,7 @@
 #include "animation.h"
 
-Animation::Animation(const std::string& name, const size_t keyCount, const Skeleton& skeleton)
-	: m_Name(name), m_KeyCount(keyCount), m_Skeleton(skeleton)
+Animation::Animation(std::string&& name, const size_t keyCount, const Skeleton& skeleton)
+	: m_Name(std::move(name)), m_KeyCount(keyCount), m_Skeleton(skeleton)
 {
 	m_KeyFrames.resize(keyCount);
 
