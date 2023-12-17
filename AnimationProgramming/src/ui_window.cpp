@@ -41,7 +41,7 @@ void UiWindow::Main()
 	glfwWindowHint(GLFW_SAMPLES, 8);
 	glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
-	GLFWwindow* window = glfwCreateWindow(1400, 800, "UI", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(1, 1, "UI", NULL, NULL);
 
 	if (window == NULL)
 		return;
@@ -70,6 +70,7 @@ void UiWindow::Main()
 
 	// Show window
 	glfwShowWindow(window);
+	glfwHideWindow(window);
 
 	while (!glfwWindowShouldClose(window) && !m_CloseWindow)
 	{
