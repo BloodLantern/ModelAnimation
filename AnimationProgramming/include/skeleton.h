@@ -16,6 +16,7 @@ public:
 	void AddBone(const Bone bone);
 
 	_NODISCARD Bone& GetRoot();
+	_NODISCARD const size_t GetBoneCount() const;
 
 	void SetupFamily();
 

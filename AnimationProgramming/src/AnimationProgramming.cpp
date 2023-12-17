@@ -17,6 +17,7 @@
 
 #include "ui_window.h"
 #include "skeleton.h"
+#include "animation.h"
 #include "Engine_extensions.h"
 
 
@@ -25,8 +26,9 @@ class CSimulation : public ISimulation
 private:
 	UiWindow m_UiWindow;
 	Skeleton m_Skeleton;
+	std::vector<Animation> m_Animations;
 
-	virtual void Init() override
+	void LoadSkeleton()
 	{
 		size_t boneCount = GetSkeletonBoneCount() - 4;
 		m_Skeleton.Reserve(boneCount);
@@ -43,19 +45,36 @@ private:
 
 		m_Skeleton.SetupFamily();
 		m_UiWindow.SetSkeleton(&m_Skeleton);
-		
-		int spine01 = GetSkeletonBoneIndex("spine_01");
+	}
 
-		int spineParent = GetSkeletonBoneParentIndex(spine01);
-		const char* spineParentName = GetSkeletonBoneName(spineParent);
-		
-		float posX, posY, posZ, quatW, quatX, quatY, quatZ;
-		size_t keyCount = GetAnimKeyCount("ThirdPersonWalk.anim");
-		GetAnimLocalBoneTransform("ThirdPersonWalk.anim", spineParent, keyCount / 2, posX, posY, posZ, quatW, quatX, quatY, quatZ);
-		
-		printf("Spine parent bone : %s\n", spineParentName);
-		printf("Anim key count : %ld\n", keyCount);
-		printf("Anim key : pos(%.2f,%.2f,%.2f) rotation quat(%.10f,%.10f,%.10f,%.10f)\n", posX, posY, posZ, quatW, quatX, quatY, quatZ);
+	void LoadAnimation(const std::string& name)
+	{
+		Animation anim = Animation(name, GetAnimKeyCount(name.c_str()), m_Skeleton);
+
+		for (size_t i = 0; i < anim.GetKeyCount(); i++)
+		{
+			for (size_t j = 0; j < anim.GetBoneCount(); j++)
+			{
+				Vector3 p;
+				Quaternion r;
+				EngineExt::GetAnimLocalBoneTransform(anim, j, i, p, r);
+
+				anim.AddKeyFrame(i, j, p, r);
+
+				// printf("%s : %d ; %d | %f ; %f ; %f | %f ; %f ; %f ; %f\n", anim.GetName().c_str(), i, j, p.x, p.y, p.z, r.real, r.imaginary.x, r.imaginary.y, r.imaginary.z);
+			}
+		}
+
+		m_Animations.push_back(anim);
+	}
+
+	virtual void Init() override
+	{
+		LoadSkeleton();
+		LoadAnimation("ThirdPersonWalk.anim");
+		LoadAnimation("ThirdPersonRun.anim");
+
+		m_UiWindow.SetAnimations(&m_Animations);
 	}
 
 	virtual void Update(float frameTime) override

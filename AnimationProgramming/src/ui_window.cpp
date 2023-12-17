@@ -85,6 +85,8 @@ void UiWindow::Main()
 		DrawSkeletonHierarchy();
 		DrawCurrentBoneInfo();
 
+		DrawAnimations();
+
 		// Rendering
 		ImGui::Render();
 		int displayW, displayH;
@@ -132,14 +134,14 @@ void UiWindow::DrawBoneInSkeletonHierarchy(Bone& bone)
 {
 	for (Bone* const bone : bone.GetChildren())
 	{
-		if (ImGui::TreeNodeEx(bone->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow))
-		{
-			if (ImGui::IsItemClicked())
-				m_SelectedBone = bone;
+		if (!ImGui::TreeNodeEx(bone->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow))
+			continue;
 
-			DrawBoneInSkeletonHierarchy(*bone);
-			ImGui::TreePop();
-		}
+		if (ImGui::IsItemClicked())
+			m_SelectedBone = bone;
+
+		DrawBoneInSkeletonHierarchy(*bone);
+		ImGui::TreePop();
 	}
 }
 
@@ -163,6 +165,51 @@ void UiWindow::DrawCurrentBoneInfo() const
 	ImGui::End();
 }
 
+void UiWindow::DrawAnimations()
+{
+	if (!m_Animations)
+		return;
+
+	ImGui::Begin("Animations");
+
+	for (const Animation& a : *m_Animations)
+	{
+		if (!ImGui::CollapsingHeader(a.GetName().c_str()))
+			continue;
+
+		const size_t keyCount = a.GetKeyCount();
+		ImGui::Text("Key count : %d", keyCount);
+
+		for (size_t i = 0; i < keyCount; i++)
+		{
+			std::string txt = std::string("Frame ").append(std::to_string(i));
+
+			if (!ImGui::TreeNode(txt.c_str()))
+				continue;
+
+			for (size_t j = 0; j < a.GetBoneCount(); j++)
+			{
+				txt = std::string("Bone ").append(std::to_string(j));
+				if (!ImGui::TreeNode(txt.c_str()))
+					continue;
+
+				const Animation::KeyFrame& keyFrame = a.GetKeyFrame(i, j);
+
+				ImGui::BeginDisabled();
+				ImGui::InputFloat3("Position", &const_cast<Animation::KeyFrame&>(keyFrame).Position.x);
+				ImGui::InputFloat4("Rotation", &const_cast<Animation::KeyFrame&>(keyFrame).Rotation.imaginary.x);
+
+				ImGui::EndDisabled();
+				ImGui::TreePop();
+			}
+
+			ImGui::TreePop();
+		}
+	}
+
+	ImGui::End();
+}
+
 void UiWindow::DrawSkeletonHierarchy()
 {
 	if (!m_Skeleton)
@@ -178,4 +225,9 @@ void UiWindow::DrawSkeletonHierarchy()
 void UiWindow::SetSkeleton(Skeleton* skeleton)
 {
 	m_Skeleton = skeleton;
+}
+
+void UiWindow::SetAnimations(std::vector<Animation>* animations)
+{
+	m_Animations = animations;
 }

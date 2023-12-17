@@ -32,6 +32,11 @@ _NODISCARD Bone& Skeleton::GetRoot()
 	return m_Bones[0];
 }
 
+const size_t Skeleton::GetBoneCount() const
+{
+	return m_Bones.size();
+}
+
 void Skeleton::SetupFamily()
 {
 	for (size_t i = 0; i < m_Bones.size(); i++)
