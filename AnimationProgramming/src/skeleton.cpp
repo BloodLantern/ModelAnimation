@@ -1,7 +1,9 @@
 #include "skeleton.h"
 #include <cassert>
+#include <iostream>
 
 #include "Engine.h"
+#include "Engine_extensions.h"
 
 void Skeleton::Reserve(const size_t nbr)
 {
@@ -42,5 +44,26 @@ void Skeleton::SetupFamily()
 		m_Bones[i].SetParent(&m_Bones[parentId]);
 
 		m_Bones[parentId].AddChild(&m_Bones[i]);
+	}
+}
+
+void Skeleton::Draw()
+{
+	Bone& root = GetRoot();
+	Draw_Recursive(root, Vector3(0.f), Matrix4x4::Identity());
+}
+
+void Skeleton::Draw_Recursive(Bone& bone, const Vector3& parentPos, const Matrix4x4& parentTrs)
+{
+	Matrix4x4 trs = parentTrs * bone.GetLocalTransform();
+	Vector4 v = Vector4(0.f, 0.f, 0.f, 1.f);
+	
+	Vector4 p = trs * v;
+	Vector3 position = Vector3(p.x, p.y, p.z);
+
+	EngineExt::DrawLine(parentPos, position, Vector3(0.f));
+	for (Bone* b : bone.GetChildren())
+	{
+		Draw_Recursive(*b, position, trs);
 	}
 }

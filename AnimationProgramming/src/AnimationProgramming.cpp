@@ -17,16 +17,11 @@
 
 #include "ui_window.h"
 #include "skeleton.h"
+#include "Engine_extensions.h"
 
 
 class CSimulation : public ISimulation
 {
-private:
-	static void GetSkeletonBoneLocalBindTransform(int boneIndex, Vector3& p, Quaternion& r)
-	{
-		::GetSkeletonBoneLocalBindTransform(boneIndex, p.x, p.y, p.z, r.real, r.imaginary.x, r.imaginary.y, r.imaginary.z);
-	}
-
 private:
 	UiWindow m_UiWindow;
 	Skeleton m_Skeleton;
@@ -40,7 +35,8 @@ private:
 		{
 			Bone bone(GetSkeletonBoneName(i));
 
-			GetSkeletonBoneLocalBindTransform(i, bone.Position, bone.Rotation);
+			EngineExt::GetSkeletonBoneLocalBindTransform(i, bone.Position, bone.Rotation);
+			bone.ComputeTransform();
 
 			m_Skeleton.AddBone(bone);
 		}
@@ -72,6 +68,8 @@ private:
 
 		// Z axis
 		DrawLine(0, 0, 0, 0, 0, 100, 0, 0, 1);
+
+		m_Skeleton.Draw();
 	}
 };
 

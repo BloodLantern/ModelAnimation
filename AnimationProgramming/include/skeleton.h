@@ -8,6 +8,8 @@ class Skeleton
 private:
 	std::vector<Bone> m_Bones;
 
+	void Draw_Recursive(Bone& bone, const Vector3& parentPos, const Matrix4x4& parentTrs);
+
 public:
 	void Reserve(const size_t nbr);
 	void AddBone(const Bone bone, const size_t index);
@@ -16,4 +18,6 @@ public:
 	_NODISCARD Bone& GetRoot();
 
 	void SetupFamily();
+
+	void Draw();
 };

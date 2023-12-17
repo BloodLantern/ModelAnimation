@@ -153,6 +153,11 @@ void UiWindow::DrawCurrentBoneInfo() const
 	ImGui::BeginDisabled();
 	ImGui::InputFloat3("Position", &m_SelectedBone->Position.x);
 	ImGui::InputFloat4("Rotation", &m_SelectedBone->Rotation.imaginary.x);
+
+	ImGui::InputFloat4("Row 1", &m_SelectedBone->GetLocalTransform()[0].x);
+	ImGui::InputFloat4("Row 2", &m_SelectedBone->GetLocalTransform()[1].x);
+	ImGui::InputFloat4("Row 3", &m_SelectedBone->GetLocalTransform()[2].x);
+	ImGui::InputFloat4("Row 4", &m_SelectedBone->GetLocalTransform()[3].x);
 	ImGui::EndDisabled();
 
 	ImGui::End();
