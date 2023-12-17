@@ -51,6 +51,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+!AnimationProgramming/AnimationProgramming.vcxproj.user
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
