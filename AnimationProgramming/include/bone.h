@@ -16,6 +16,8 @@ private:
 	std::string m_Name;
 
 	Matrix4x4 m_LocalTrs;
+	Matrix4x4 m_GlobalTrs;
+	Matrix4x4 m_GlobalInvTrs;
 
 public:
 	Vector3 Position;
@@ -31,7 +33,10 @@ public:
 	void SetParent(Bone* parent);
 	void AddChild(Bone* child);
 
+	void ComputeMatrixes();
+
 	_NODISCARD std::vector<Bone*>& GetChildren();
 	_NODISCARD const std::string& GetName() const;
 	_NODISCARD Matrix4x4& GetLocalTransform();
+	_NODISCARD Matrix4x4& GetGlobalTransform();
 };

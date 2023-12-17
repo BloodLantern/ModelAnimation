@@ -154,13 +154,22 @@ void UiWindow::DrawCurrentBoneInfo() const
 	ImGui::Begin("Current bone");
 
 	ImGui::BeginDisabled();
+
+	ImGui::Text("%s", m_SelectedBone->GetName().c_str());
 	ImGui::InputFloat3("Position", &m_SelectedBone->Position.x);
 	ImGui::InputFloat4("Rotation", &m_SelectedBone->Rotation.imaginary.x);
 
-	ImGui::InputFloat4("Row 1", &m_SelectedBone->GetLocalTransform()[0].x);
-	ImGui::InputFloat4("Row 2", &m_SelectedBone->GetLocalTransform()[1].x);
-	ImGui::InputFloat4("Row 3", &m_SelectedBone->GetLocalTransform()[2].x);
-	ImGui::InputFloat4("Row 4", &m_SelectedBone->GetLocalTransform()[3].x);
+	ImGui::Dummy(ImVec2(10.f, 25.f));
+	ImGui::InputFloat4("Local row 1", &m_SelectedBone->GetLocalTransform()[0].x);
+	ImGui::InputFloat4("Local row 2", &m_SelectedBone->GetLocalTransform()[1].x);
+	ImGui::InputFloat4("Local row 3", &m_SelectedBone->GetLocalTransform()[2].x);
+	ImGui::InputFloat4("Local row 4", &m_SelectedBone->GetLocalTransform()[3].x);
+
+	ImGui::Dummy(ImVec2(10.f, 25.f));
+	ImGui::InputFloat4("Global row 1", &m_SelectedBone->GetGlobalTransform()[0].x);
+	ImGui::InputFloat4("Global row 2", &m_SelectedBone->GetGlobalTransform()[1].x);
+	ImGui::InputFloat4("Global row 3", &m_SelectedBone->GetGlobalTransform()[2].x);
+	ImGui::InputFloat4("Global row 4", &m_SelectedBone->GetGlobalTransform()[3].x);
 	ImGui::EndDisabled();
 
 	ImGui::End();
@@ -194,11 +203,11 @@ void UiWindow::DrawAnimations()
 				if (!ImGui::TreeNode(txt.c_str()))
 					continue;
 
-				const Animation::KeyFrame& keyFrame = a.GetKeyFrame(i, j);
+				const KeyFrame& keyFrame = a.GetKeyFrame(i, j);
 
 				ImGui::BeginDisabled();
-				ImGui::InputFloat3("Position", &const_cast<Animation::KeyFrame&>(keyFrame).Position.x);
-				ImGui::InputFloat4("Rotation", &const_cast<Animation::KeyFrame&>(keyFrame).Rotation.imaginary.x);
+				ImGui::InputFloat3("Position", &const_cast<Vector3&>(keyFrame.GetPosition()).x);
+				ImGui::InputFloat4("Rotation", &const_cast<Quaternion&>(keyFrame.GetRotation()).imaginary.x);
 
 				ImGui::EndDisabled();
 				ImGui::TreePop();

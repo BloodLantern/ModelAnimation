@@ -1,4 +1,5 @@
 #include "animation.h"
+#include "Engine.h"
 
 Animation::Animation(std::string&& name, const size_t keyCount, const Skeleton& skeleton)
 	: m_Name(std::move(name)), m_KeyCount(keyCount), m_Skeleton(skeleton)
@@ -26,7 +27,7 @@ const std::string& Animation::GetName() const
 	return m_Name;
 }
 
-const Animation::KeyFrame& Animation::GetKeyFrame(const size_t frame, const size_t boneIndex) const
+const KeyFrame& Animation::GetKeyFrame(const size_t frame, const size_t boneIndex) const
 {
 	return m_KeyFrames[frame][boneIndex];
 }
@@ -34,4 +35,8 @@ const Animation::KeyFrame& Animation::GetKeyFrame(const size_t frame, const size
 void Animation::AddKeyFrame(const size_t frame, const size_t boneIndex, const Vector3& position, const Quaternion& rotation)
 {
 	m_KeyFrames[frame][boneIndex] = KeyFrame(position, rotation);
+}
+
+void Animation::Animate()
+{
 }

@@ -1,4 +1,5 @@
 #include "bone.h"
+#include <iostream>
 
 Bone::Bone()
 	: m_Name(""), m_Parent(nullptr), m_LocalTrs(Matrix4x4::Identity())
@@ -37,6 +38,22 @@ void Bone::AddChild(Bone* child)
 	m_Children.push_back(child);
 }
 
+void Bone::ComputeMatrixes()
+{
+	Bone* parent = m_Parent;
+
+	if (parent)
+	{
+		m_GlobalTrs = parent->m_GlobalTrs * m_LocalTrs;
+	}
+	else
+	{
+		m_GlobalTrs = m_LocalTrs;
+	}
+
+	m_GlobalInvTrs = Matrix4x4::Inverse(m_GlobalTrs);
+}
+
 _NODISCARD std::vector<Bone*>& Bone::GetChildren()
 {
 	return m_Children;
@@ -50,4 +67,9 @@ _NODISCARD const std::string& Bone::GetName() const
 Matrix4x4& Bone::GetLocalTransform()
 {
 	return m_LocalTrs;
+}
+
+Matrix4x4& Bone::GetGlobalTransform()
+{
+	return m_GlobalTrs;
 }

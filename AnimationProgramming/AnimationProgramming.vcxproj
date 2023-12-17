@@ -39,6 +39,7 @@
     <ClCompile Include="externals\include\ImGui\imgui_tables.cpp" />
     <ClCompile Include="externals\include\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="src\Engine_extensions.cpp" />
+    <ClCompile Include="src\key_frame.cpp" />
     <ClCompile Include="src\skeleton.cpp" />
     <ClCompile Include="src\AnimationProgramming.cpp" />
     <ClCompile Include="src\stdafx.cpp" />
@@ -70,6 +71,7 @@
     <ClInclude Include="externals\include\stb_image.h" />
     <ClInclude Include="include\Engine.h" />
     <ClInclude Include="include\Engine_extensions.h" />
+    <ClInclude Include="include\key_frame.h" />
     <ClInclude Include="include\Simulation.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\targetver.h" />

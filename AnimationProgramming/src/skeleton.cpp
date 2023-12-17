@@ -50,25 +50,29 @@ void Skeleton::SetupFamily()
 
 		m_Bones[parentId].AddChild(&m_Bones[i]);
 	}
+
+	for (Bone& b : m_Bones)
+	{
+		b.ComputeMatrixes();
+	}
 }
 
 void Skeleton::Draw()
 {
 	Bone& root = GetRoot();
-	Draw_Recursive(root, Vector3(0.f), Matrix4x4::Identity());
+	Draw_Recursive(root, Vector3(0.f));
 }
 
-void Skeleton::Draw_Recursive(Bone& bone, const Vector3& parentPos, const Matrix4x4& parentTrs)
+void Skeleton::Draw_Recursive(Bone& bone, const Vector3& parentPos)
 {
-	const Matrix4x4 trs = parentTrs * bone.GetLocalTransform();
 	constexpr Vector4 v(0.f, 0.f, 0.f, 1.f);
 	
-	const Vector4 p = trs * v;
+	const Vector4 p = bone.GetGlobalTransform() * v;
 	const Vector3 position = Vector3(p.x, p.y, p.z);
 
 	EngineExt::DrawLine(parentPos, position, Vector3(0.f));
 	for (Bone* b : bone.GetChildren())
 	{
-		Draw_Recursive(*b, position, trs);
+		Draw_Recursive(*b, position);
 	}
 }
