@@ -50,13 +50,19 @@ void Animation::AddKeyFrame(const size_t frame, const size_t boneIndex, const Ve
 
 void Animation::Animate(const float deltaTime)
 {
-	if (DeltaModulation < 0.f)
-		DeltaModulation = 0.f;
-
 	if (!Paused)
 	{
 		m_Time += deltaTime * DeltaModulation;
-		m_Time = std::fmodf(m_Time, m_KeyCount * SAMPLE_TIME);
+		
+		if (DeltaModulation >= 0.f)
+		{
+			m_Time = std::fmodf(m_Time, m_KeyCount * SAMPLE_TIME);
+		}
+		else
+		{
+			if (m_Time <= 0)
+				m_Time = m_KeyCount * SAMPLE_TIME - SAMPLE_TIME;
+		}
 
 		CurrentFrame = m_Time / SAMPLE_TIME;
 	}
