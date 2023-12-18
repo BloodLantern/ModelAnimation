@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include "maths/calc.hpp"
+
 static constexpr const float SAMPLE_TIME = (1 / 30.f);
 
 Animation::Animation(std::string&& name, const size_t keyCount, const Skeleton& skeleton)
@@ -61,22 +63,30 @@ void Animation::Animate(const float deltaTime)
 
 	const size_t boneCount = GetBoneCount();
 
+	const float t = std::fmodf(m_Time, SAMPLE_TIME) / SAMPLE_TIME;
+
 	std::vector<Matrix4x4> matrices(boneCount);
 	std::vector<Matrix4x4> animMatrices(boneCount);
+	
 	const std::vector<KeyFrame>& keyFrames = m_KeyFrames[CurrentFrame];
+	const std::vector<KeyFrame>& nextKeyFrames = m_KeyFrames[(CurrentFrame + 1) % m_KeyCount];
 
 	for (size_t i = 0; i < boneCount; i++)
 	{
 		const Bone& bone = m_Skeleton.GetBone(i);
+
+		const Vector3 position = calc::Lerp(keyFrames[i].GetPosition(), nextKeyFrames[i].GetPosition(), t);
+		const Quaternion rotation = Quaternion::Slerp(keyFrames[i].GetRotation(), nextKeyFrames[i].GetRotation(), t);
+		const Matrix4x4 transform = Matrix4x4::TRS(position, rotation, 1.f);
 		
 		const int parentIdx = GetSkeletonBoneParentIndex(i);
 		if (parentIdx != -1)
 		{
-			animMatrices[i] = animMatrices[parentIdx] * bone.GetLocalTransform() * keyFrames[i].GetTransform();
+			animMatrices[i] = animMatrices[parentIdx] * bone.GetLocalTransform() * transform;
 		}
 		else
 		{
-			animMatrices[i] = bone.GetLocalTransform() * keyFrames[i].GetTransform();
+			animMatrices[i] = bone.GetLocalTransform() * transform;
 		}
 		
 		matrices[i] = (animMatrices[i] * bone.GetGlobalInvTransform()).Transpose();
