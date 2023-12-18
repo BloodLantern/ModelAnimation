@@ -10,6 +10,7 @@
 #include "skeleton.h"
 #include "animation.h"
 #include "Engine_extensions.h"
+#include "montage/animation_montage.h"
 
 
 class CSimulation : public ISimulation

@@ -1,5 +1,5 @@
-﻿#include "montage/animation_montage.h"
-
+#include "montage/animation_montage.h"
+#include "montage/animation_montage_command.h"
 #include <algorithm>
 
 AnimationMontage::AnimationMontage(std::string&& name)
@@ -10,7 +10,7 @@ AnimationMontage::AnimationMontage(std::string&& name)
 void AnimationMontage::Update(float deltaTime)
 {
     for (const AnimationMontageCommand& command : m_Commands)
-        command.OnUpdate();
+        command.OnUpdate(deltaTime);
 }
 
 void AnimationMontage::Add(const AnimationMontageCommand& command)

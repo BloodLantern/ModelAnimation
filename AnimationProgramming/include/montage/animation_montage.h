@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "animation.h"
-#include "animation_montage_command.h"
+#include "montage/animation_montage_command.h"
 
 struct AnimationMontageAnimation
 {

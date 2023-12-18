@@ -19,6 +19,6 @@ public:
     virtual ~AnimationMontageCommand() = default;
 
     virtual void OnAdded(AnimationMontage* montage) const;
-    virtual void OnUpdate() const;
+    virtual void OnUpdate(const float deltaTime) const;
     virtual void OnRemoved() const;
 };
