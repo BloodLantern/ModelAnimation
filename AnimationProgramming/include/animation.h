@@ -12,6 +12,7 @@ private:
 	const Skeleton& m_Skeleton;
 
 	std::vector<std::vector<KeyFrame>> m_KeyFrames;
+	std::vector<KeyFrame> m_LastKeyFrames;
 	float m_Time;
 
 public:

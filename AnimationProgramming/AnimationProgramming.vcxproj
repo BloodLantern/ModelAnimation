@@ -30,6 +30,7 @@
     <ClCompile Include="externals\include\maths\vector3.cpp" />
     <ClCompile Include="externals\include\maths\vector4.cpp" />
     <ClCompile Include="src\animation.cpp" />
+    <ClCompile Include="src\animation_montage.cpp" />
     <ClCompile Include="src\bone.cpp" />
     <ClCompile Include="externals\include\ImGui\imgui.cpp" />
     <ClCompile Include="externals\include\ImGui\imgui_demo.cpp" />
@@ -58,6 +59,7 @@
     <ClInclude Include="externals\include\maths\vector3.hpp" />
     <ClInclude Include="externals\include\maths\vector4.hpp" />
     <ClInclude Include="include\animation.h" />
+    <ClInclude Include="include\animation_montage.h" />
     <ClInclude Include="include\bone.h" />
     <ClInclude Include="externals\include\ImGui\imconfig.h" />
     <ClInclude Include="externals\include\ImGui\imgui.h" />

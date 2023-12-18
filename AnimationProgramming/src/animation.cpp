@@ -11,11 +11,14 @@ Animation::Animation(std::string&& name, const size_t keyCount, const Skeleton& 
 	: m_Name(std::move(name)), m_KeyCount(keyCount), m_Skeleton(skeleton)
 {
 	m_KeyFrames.resize(keyCount);
+	m_LastKeyFrames.resize(skeleton.GetBoneCount());
 
 	for (size_t i = 0; i < keyCount; i++)
 	{
 		m_KeyFrames[i].resize(skeleton.GetBoneCount());
 	}
+
+	m_LastKeyFrames = m_KeyFrames[0];
 
 	Paused = false;
 	m_Time = 0.f;
@@ -57,8 +60,12 @@ void Animation::Animate(const float deltaTime)
 	{
 		m_Time += deltaTime * DeltaModulation;
 		m_Time = std::fmodf(m_Time, m_KeyCount * SAMPLE_TIME);
+		
+		const size_t lastFrame = CurrentFrame;
+		CurrentFrame = (size_t) (m_Time / SAMPLE_TIME);
 
-		CurrentFrame = m_Time / SAMPLE_TIME;
+		if (lastFrame != CurrentFrame)
+			m_LastKeyFrames = m_KeyFrames[lastFrame];
 	}
 
 	const size_t boneCount = GetBoneCount();
@@ -69,14 +76,13 @@ void Animation::Animate(const float deltaTime)
 	std::vector<Matrix4x4> animMatrices(boneCount);
 	
 	const std::vector<KeyFrame>& keyFrames = m_KeyFrames[CurrentFrame];
-	const std::vector<KeyFrame>& nextKeyFrames = m_KeyFrames[(CurrentFrame + 1) % m_KeyCount];
 
 	for (size_t i = 0; i < boneCount; i++)
 	{
 		const Bone& bone = m_Skeleton.GetBone(i);
 
-		const Vector3 position = calc::Lerp(keyFrames[i].GetPosition(), nextKeyFrames[i].GetPosition(), t);
-		const Quaternion rotation = Quaternion::Slerp(keyFrames[i].GetRotation(), nextKeyFrames[i].GetRotation(), t);
+		const Vector3 position = calc::Lerp(m_LastKeyFrames[i].GetPosition(), keyFrames[i].GetPosition(), t);
+		const Quaternion rotation = Quaternion::Slerp(m_LastKeyFrames[i].GetRotation(), keyFrames[i].GetRotation(), t);
 		const Matrix4x4 transform = Matrix4x4::TRS(position, rotation, 1.f);
 		
 		const int parentIdx = GetSkeletonBoneParentIndex(i);
