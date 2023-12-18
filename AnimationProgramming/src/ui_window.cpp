@@ -188,7 +188,7 @@ void UiWindow::DrawAnimations()
 		ImGui::Text("Key count : %d", keyCount);
 		ImGui::SliderInt("Current frame", (int*)&a.CurrentFrame, 0, keyCount);
 		ImGui::Checkbox("Paused", &a.Paused);
-		ImGui::InputFloat("Delta modulation", &a.DeltaModulation, 0.1f, 1.f);
+		ImGui::InputFloat("Delta modulation", &a.Speed, 0.1f, 1.f);
 
 		for (size_t i = 0; i < keyCount; i++)
 		{

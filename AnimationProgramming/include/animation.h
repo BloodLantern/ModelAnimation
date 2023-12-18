@@ -1,26 +1,29 @@
 #pragma once
 
-#include <stdint.h>
 #include "skeleton.h"
 #include "key_frame.h"
 
 class Animation
 {
-private:
 	std::string m_Name;
 	size_t m_KeyCount;
-	const Skeleton& m_Skeleton;
+	Skeleton* m_Skeleton;
 
 	std::vector<std::vector<KeyFrame>> m_KeyFrames;
 	std::vector<KeyFrame> m_LastKeyFrames;
-	float m_Time;
+
+	int m_Framerate = 30;
+	float m_FrameDuration;
+	
+	float m_Time = 0.f;
+	float m_Duration;
 
 public:
-	size_t CurrentFrame;
-	bool Paused;
-	float DeltaModulation;
+	size_t CurrentFrame = 0;
+	bool Paused = false;
+	float Speed = 1.f;
 
-	Animation(std::string&& name, const size_t keyCount, const Skeleton& skeleton);
+	Animation(std::string&& name, const size_t keyCount, Skeleton* skeleton);
 
 	_NODISCARD size_t GetKeyCount() const;
 	_NODISCARD size_t GetBoneCount() const;

@@ -5,25 +5,20 @@
 
 #include "maths/calc.hpp"
 
-static constexpr const float SAMPLE_TIME = (1 / 30.f);
-
-Animation::Animation(std::string&& name, const size_t keyCount, const Skeleton& skeleton)
-	: m_Name(std::move(name)), m_KeyCount(keyCount), m_Skeleton(skeleton)
+Animation::Animation(std::string&& name, const size_t keyCount, Skeleton* skeleton)
+	: m_Name(std::move(name))
+	, m_KeyCount(keyCount)
+	, m_Skeleton(skeleton)
+	, m_FrameDuration(1.f / (float) m_Framerate)
+	, m_Duration((float) keyCount * m_FrameDuration)
 {
 	m_KeyFrames.resize(keyCount);
-	m_LastKeyFrames.resize(skeleton.GetBoneCount());
+	m_LastKeyFrames.resize(skeleton->GetBoneCount());
 
 	for (size_t i = 0; i < keyCount; i++)
-	{
-		m_KeyFrames[i].resize(skeleton.GetBoneCount());
-	}
+		m_KeyFrames[i].resize(skeleton->GetBoneCount());
 
 	m_LastKeyFrames = m_KeyFrames[0];
-
-	Paused = false;
-	m_Time = 0.f;
-	CurrentFrame = 0;
-	DeltaModulation = 1.f;
 }
 
 size_t Animation::GetKeyCount() const
@@ -33,7 +28,7 @@ size_t Animation::GetKeyCount() const
 
 size_t Animation::GetBoneCount() const
 {
-	return m_Skeleton.GetBoneCount();
+	return m_Skeleton->GetBoneCount();
 }
 
 const std::string& Animation::GetName() const
@@ -55,20 +50,20 @@ void Animation::Animate(const float deltaTime)
 {
 	if (!Paused)
 	{
-		m_Time += deltaTime * DeltaModulation;
-		m_Time = std::fmodf(m_Time, m_KeyCount * SAMPLE_TIME);
+		m_Time += deltaTime * Speed;
+		m_Time = std::fmodf(m_Time, m_Duration);
 		
 		const size_t lastFrame = CurrentFrame;
-		CurrentFrame = (size_t) (m_Time / SAMPLE_TIME);
+		CurrentFrame = (size_t) (m_Time / m_FrameDuration);
 		
-		if (DeltaModulation >= 0.f)
+		if (Speed >= 0.f)
 		{
-			m_Time = std::fmodf(m_Time, m_KeyCount * SAMPLE_TIME);
+			m_Time = std::fmodf(m_Time, m_Duration);
 		}
 		else
 		{
 			if (m_Time <= 0)
-				m_Time = m_KeyCount * SAMPLE_TIME - SAMPLE_TIME;
+				m_Time = m_Duration - m_FrameDuration;
 		}
 
 		if (lastFrame != CurrentFrame)
@@ -77,8 +72,8 @@ void Animation::Animate(const float deltaTime)
 
 	const size_t boneCount = GetBoneCount();
 
-	float t = std::fmodf(m_Time, SAMPLE_TIME) / SAMPLE_TIME;
-	if (DeltaModulation < 0)
+	float t = std::fmodf(m_Time, m_FrameDuration) / m_FrameDuration;
+	if (Speed < 0)
 		t = 1 - t;
 
 	std::vector<Matrix4x4> matrices(boneCount);
@@ -88,13 +83,13 @@ void Animation::Animate(const float deltaTime)
 
 	for (size_t i = 0; i < boneCount; i++)
 	{
-		const Bone& bone = m_Skeleton.GetBone(i);
+		const Bone& bone = m_Skeleton->GetBone(i);
 
 		const Vector3 position = calc::Lerp(m_LastKeyFrames[i].GetPosition(), keyFrames[i].GetPosition(), t);
 		const Quaternion rotation = Quaternion::Slerp(m_LastKeyFrames[i].GetRotation(), keyFrames[i].GetRotation(), t);
 		const Matrix4x4 transform = Matrix4x4::TRS(position, rotation, 1.f);
 		
-		const int parentIdx = GetSkeletonBoneParentIndex(i);
+		const int parentIdx = GetSkeletonBoneParentIndex((int) i);
 		if (parentIdx != -1)
 		{
 			animMatrices[i] = animMatrices[parentIdx] * bone.GetLocalTransform() * transform;

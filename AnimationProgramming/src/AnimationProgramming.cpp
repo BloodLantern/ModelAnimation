@@ -43,7 +43,7 @@ private:
 
 	void LoadAnimation(std::string&& name)
 	{
-		Animation anim(std::move(name), GetAnimKeyCount(name.c_str()), m_Skeleton);
+		Animation anim(std::move(name), GetAnimKeyCount(name.c_str()), &m_Skeleton);
 
 		for (size_t i = 0; i < anim.GetKeyCount(); i++)
 		{
@@ -62,7 +62,7 @@ private:
 		m_Animations.push_back(anim);
 	}
 
-	virtual void Init() override
+	void Init() override
 	{
 		LoadSkeleton();
 		LoadAnimation("ThirdPersonWalk.anim");
@@ -72,7 +72,7 @@ private:
 		m_UiWindow.SetCurrentAnimation(&m_CurrentAnimation);
 	}
 
-	virtual void Update(float frameTime) override
+	void Update(const float frameTime) override
 	{
 		// X axis
 		DrawLine(0, 0, 0, 100, 0, 0, 1, 0, 0);
