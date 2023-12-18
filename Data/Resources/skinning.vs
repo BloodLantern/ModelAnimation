@@ -37,7 +37,7 @@ void main(void)
 	for (int i = 0; i < 4; i++)
 	{
 		int idx = int(boneIndices[i]);
-		pos += boneWeights[i] * (posRest * skin.mat[idx]);
+		pos += boneWeights[i] * (skin.mat[idx] * posRest);
 	}
 
 	// Calculate the position of the vertex against the world, view, and projection matrices.

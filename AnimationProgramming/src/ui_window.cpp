@@ -156,10 +156,10 @@ void UiWindow::DrawCurrentBoneInfo() const
 	ImGui::InputFloat4("Rotation", &m_SelectedBone->Rotation.imaginary.x);
 
 	ImGui::Dummy(ImVec2(10.f, 25.f));
-	ImGui::InputFloat4("Local row 1", &m_SelectedBone->GetLocalTransform()[0].x);
-	ImGui::InputFloat4("Local row 2", &m_SelectedBone->GetLocalTransform()[1].x);
-	ImGui::InputFloat4("Local row 3", &m_SelectedBone->GetLocalTransform()[2].x);
-	ImGui::InputFloat4("Local row 4", &m_SelectedBone->GetLocalTransform()[3].x);
+	ImGui::InputFloat4("Local row 1", &const_cast<Matrix4x4&>(m_SelectedBone->GetLocalTransform())[0].x);
+	ImGui::InputFloat4("Local row 2", &const_cast<Matrix4x4&>(m_SelectedBone->GetLocalTransform())[1].x);
+	ImGui::InputFloat4("Local row 3", &const_cast<Matrix4x4&>(m_SelectedBone->GetLocalTransform())[2].x);
+	ImGui::InputFloat4("Local row 4", &const_cast<Matrix4x4&>(m_SelectedBone->GetLocalTransform())[3].x);
 
 	ImGui::Dummy(ImVec2(10.f, 25.f));
 	ImGui::InputFloat4("Global row 1", &const_cast<Matrix4x4&>(m_SelectedBone->GetGlobalTransform())[0].x);

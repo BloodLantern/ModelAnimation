@@ -72,14 +72,14 @@ void Animation::Animate(const float deltaTime)
 		const int parentIdx = GetSkeletonBoneParentIndex(i);
 		if (parentIdx != -1)
 		{
-			animMatrices[i] = animMatrices[parentIdx] * keyFrames[i].GetTransform();
+			animMatrices[i] = animMatrices[parentIdx] * bone.GetLocalTransform() * keyFrames[i].GetTransform();
 		}
 		else
 		{
-			animMatrices[i] = keyFrames[i].GetTransform();
+			animMatrices[i] = bone.GetLocalTransform() * keyFrames[i].GetTransform();
 		}
 		
-		matrices[i] = bone.GetGlobalTransform() * animMatrices[i] * bone.GetGlobalInvTransform();
+		matrices[i] = (animMatrices[i] * bone.GetGlobalInvTransform()).Transpose();
 	}
 
 	EngineExt::SetSkinningPose(matrices);

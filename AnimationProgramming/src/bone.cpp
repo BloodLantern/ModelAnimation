@@ -64,7 +64,7 @@ _NODISCARD const std::string& Bone::GetName() const
 	return m_Name;
 }
 
-Matrix4x4& Bone::GetLocalTransform()
+const Matrix4x4& Bone::GetLocalTransform() const
 {
 	return m_LocalTrs;
 }
