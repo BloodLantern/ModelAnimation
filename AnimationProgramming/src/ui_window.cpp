@@ -205,6 +205,8 @@ void UiWindow::DrawAnimations()
 
 				const KeyFrame& keyFrame = a.GetKeyFrame(i, j);
 
+				ImGui::Text("%s", m_Skeleton->GetBone(j).GetName().c_str());
+
 				ImGui::BeginDisabled();
 				ImGui::InputFloat3("Position", &const_cast<Vector3&>(keyFrame.GetPosition()).x);
 				ImGui::InputFloat4("Rotation", &const_cast<Quaternion&>(keyFrame.GetRotation()).imaginary.x);

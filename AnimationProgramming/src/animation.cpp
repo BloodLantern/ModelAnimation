@@ -62,13 +62,24 @@ void Animation::Animate(const float deltaTime)
 	const size_t boneCount = GetBoneCount();
 
 	std::vector<Matrix4x4> matrices(boneCount);
+	std::vector<Matrix4x4> animMatrices(boneCount);
 	const std::vector<KeyFrame>& keyFrames = m_KeyFrames[CurrentFrame];
 
 	for (size_t i = 0; i < boneCount; i++)
 	{
 		const Bone& bone = m_Skeleton.GetBone(i);
-		const Matrix4x4 m = keyFrames[i].GetTransform();
-		matrices[i] = bone.GetGlobalTransform() * m * bone.GetGlobalInvTransform();
+		
+		const int parentIdx = GetSkeletonBoneParentIndex(i);
+		if (parentIdx != -1)
+		{
+			animMatrices[i] = animMatrices[parentIdx] * keyFrames[i].GetTransform();
+		}
+		else
+		{
+			animMatrices[i] = keyFrames[i].GetTransform();
+		}
+		
+		matrices[i] = bone.GetGlobalTransform() * animMatrices[i] * bone.GetGlobalInvTransform();
 	}
 
 	EngineExt::SetSkinningPose(matrices);
