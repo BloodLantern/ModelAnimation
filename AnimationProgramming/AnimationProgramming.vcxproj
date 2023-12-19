@@ -43,6 +43,7 @@
     <ClCompile Include="src\montage\animation_montage.cpp" />
     <ClCompile Include="src\montage\animation_montage_command.cpp" />
     <ClCompile Include="src\montage\anim_command_play.cpp" />
+    <ClCompile Include="src\montage\anim_command_wait.cpp" />
     <ClCompile Include="src\skeleton.cpp" />
     <ClCompile Include="src\AnimationProgramming.cpp" />
     <ClCompile Include="src\stdafx.cpp" />
@@ -78,6 +79,7 @@
     <ClInclude Include="include\montage\animation_montage.h" />
     <ClInclude Include="include\montage\animation_montage_command.h" />
     <ClInclude Include="include\montage\anim_command_play.h" />
+    <ClInclude Include="include\montage\anim_command_wait.h" />
     <ClInclude Include="include\Simulation.h" />
     <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\targetver.h" />

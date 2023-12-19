@@ -11,6 +11,8 @@
 #include "animation.h"
 #include "Engine_extensions.h"
 #include "montage/animation_montage.h"
+#include "montage/anim_command_play.h"
+#include "montage/anim_command_wait.h"
 
 
 class CSimulation : public ISimulation
@@ -20,7 +22,7 @@ private:
 	Skeleton m_Skeleton;
 	std::vector<Animation> m_Animations;
 
-	size_t m_CurrentAnimation;
+	AnimationMontage m_Montage = AnimationMontage("WalkingMontage");
 
 	void LoadSkeleton()
 	{
@@ -63,14 +65,25 @@ private:
 		m_Animations.push_back(anim);
 	}
 
+	void LoadMontage()
+	{
+		const size_t walkingId = m_Montage.AddAnimation(m_Animations[0]);
+		const size_t runningId = m_Montage.AddAnimation(m_Animations[1]);
+
+		m_Montage.AddCommand(new AnimCmdPlay(1.f, walkingId));
+		m_Montage.AddCommand(new AnimCmdWait(.5f));
+		m_Montage.AddCommand(new AnimCmdPlay(1.f, runningId));
+	}
+
 	void Init() override
 	{
 		LoadSkeleton();
 		LoadAnimation("ThirdPersonWalk.anim");
 		LoadAnimation("ThirdPersonRun.anim");
 
+		LoadMontage();
+
 		m_UiWindow.SetAnimations(&m_Animations);
-		m_UiWindow.SetCurrentAnimation(&m_CurrentAnimation);
 	}
 
 	void Update(const float frameTime) override
@@ -85,7 +98,7 @@ private:
 		DrawLine(0, 0, 0, 0, 0, 100, 0, 0, 1);
 
 		m_Skeleton.Draw();
-		m_Animations[m_CurrentAnimation].Animate(frameTime);
+		m_Montage.Update(frameTime);
 	}
 };
 

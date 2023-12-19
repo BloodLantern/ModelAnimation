@@ -6,6 +6,16 @@ AnimCmdPlay::AnimCmdPlay(const float duration, const size_t animationId)
 {
 }
 
-void AnimCmdPlay::OnUpdate(const float deltaTime) const
+bool AnimCmdPlay::OnUpdate(const float deltaTime)
 {
+	AnimationMontageCommand::OnUpdate(deltaTime);
+
+	m_Time += deltaTime;
+
+	if (m_Duration > 0.f && m_Time > m_Duration)
+		return true;
+
+	m_Montage->GetAnimation(m_AnimationId).Animate(deltaTime);
+
+	return false;
 }

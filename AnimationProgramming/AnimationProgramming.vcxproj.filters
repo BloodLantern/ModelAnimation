@@ -99,6 +99,9 @@
     <ClCompile Include="src\montage\anim_command_play.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\montage\anim_command_wait.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Engine.h">
@@ -201,6 +204,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\montage\anim_command_play.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\montage\anim_command_wait.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

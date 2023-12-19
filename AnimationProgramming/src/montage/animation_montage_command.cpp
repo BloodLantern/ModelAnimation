@@ -5,14 +5,27 @@ AnimationMontageCommand::AnimationMontageCommand(std::string&& displayName)
 {
 }
 
-void AnimationMontageCommand::OnAdded(AnimationMontage* montage) const
+void AnimationMontageCommand::OnAdded(AnimationMontage* montage)
 {
+    m_Montage = montage;
 }
 
-void AnimationMontageCommand::OnUpdate(const float deltaTime) const
+bool AnimationMontageCommand::OnUpdate(const float deltaTime)
 {
+    if (!m_HasStarted)
+        OnBegin();
+
+    return false;
 }
 
-void AnimationMontageCommand::OnRemoved() const
+void AnimationMontageCommand::OnBegin()
 {
+    m_HasStarted = true;
+
+    m_Time = 0.f;
+}
+
+void AnimationMontageCommand::OnEnd()
+{
+    m_HasStarted = false;
 }

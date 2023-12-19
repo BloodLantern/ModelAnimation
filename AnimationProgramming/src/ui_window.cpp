@@ -177,7 +177,6 @@ void UiWindow::DrawAnimations()
 		return;
 
 	ImGui::Begin("Animations");
-	ImGui::SliderInt("Current animation", (int*)m_CurrentAnimation, 0, m_Animations->size() - 1);
 
 	for (Animation& a : *m_Animations)
 	{
