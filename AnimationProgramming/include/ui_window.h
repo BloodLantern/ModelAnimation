@@ -4,10 +4,11 @@
 
 #include "skeleton.h"
 #include "animation.h"
+#include "mesh.h"
+#include "shader.h"
 
 class UiWindow
 {
-private:
 	std::thread m_Thread;
 	bool m_CloseWindow;
 
@@ -19,6 +20,9 @@ private:
 
 	std::vector<Animation>* m_Animations;
 	size_t* m_CurrentAnimation;
+
+	Mesh* m_Mesh;
+	Shader* m_Shader;
 
 	void Main();
 	void StartThread();
