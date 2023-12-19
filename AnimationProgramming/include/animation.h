@@ -21,6 +21,7 @@ private:
 
 	float m_CrossFadeAlphaMax;
 	float m_CrossFadeAlpha;
+	bool m_IsCrossFadeAuto;
 
 	void UpdateTime(const float deltaTime);
 
@@ -40,7 +41,7 @@ public:
 	void AddKeyFrame(const size_t frame, const size_t boneIndex, const Vector3& position, const Quaternion& rotation);
 
 	void Animate(const float deltaTime);
-	void StartCrossFade(const float alpha);
+	void StartCrossFade(const float alpha, const bool isAuto);
 
 	static void CrossFade(Animation& start, Animation& end, const float deltaTime);
 };

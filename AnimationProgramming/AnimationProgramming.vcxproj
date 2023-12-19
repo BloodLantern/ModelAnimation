@@ -46,6 +46,7 @@
     <ClCompile Include="src\montage\animation_montage_command.cpp" />
     <ClCompile Include="src\montage\anim_command_cross_fade.cpp" />
     <ClCompile Include="src\montage\anim_command_play.cpp" />
+    <ClCompile Include="src\montage\anim_command_play_mixed.cpp" />
     <ClCompile Include="src\montage\anim_command_wait.cpp" />
     <ClCompile Include="src\shader.cpp" />
     <ClCompile Include="src\skeleton.cpp" />
@@ -85,6 +86,7 @@
     <ClInclude Include="include\montage\animation_montage_command.h" />
     <ClInclude Include="include\montage\anim_command_cross_fade.h" />
     <ClInclude Include="include\montage\anim_command_play.h" />
+    <ClInclude Include="include\montage\anim_command_play_mixed.h" />
     <ClInclude Include="include\montage\anim_command_wait.h" />
     <ClInclude Include="include\shader.h" />
     <ClInclude Include="include\Simulation.h" />

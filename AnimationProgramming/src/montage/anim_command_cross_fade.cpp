@@ -17,7 +17,7 @@ void AnimCmdCrossFade::OnBegin()
 	Animation& animEnd = m_Montage->GetAnimation(m_EndAnimationId);
 
 	m_NormalizedTimeScale = animEnd.GetDuration() / animStart.GetDuration();
-	animStart.StartCrossFade(m_Duration);
+	animStart.StartCrossFade(m_Duration, true);
 }
 
 bool AnimCmdCrossFade::OnUpdate(const float deltaTime)

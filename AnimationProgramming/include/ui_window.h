@@ -19,7 +19,7 @@ class UiWindow
 	Bone* m_SelectedBone;
 
 	std::vector<Animation>* m_Animations;
-	size_t* m_CurrentAnimation;
+	float* m_MixedAnimationAlpha;
 
 	Mesh* m_Mesh;
 	Shader* m_Shader;
@@ -39,7 +39,7 @@ public:
 
 	void SetSkeleton(Skeleton* skeleton);
 	void SetAnimations(std::vector<Animation>* animations);
-	void SetCurrentAnimation(size_t* currAnim);
+	void SetMixedAnimationAlpha(float* alpha);
 
 	void* operator new(size_t count) = delete;
 	void operator delete(void* ptr) = delete;

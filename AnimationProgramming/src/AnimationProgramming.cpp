@@ -17,6 +17,7 @@
 #include "montage/anim_command_play.h"
 #include "montage/anim_command_wait.h"
 #include "montage/anim_command_cross_fade.h"
+#include "montage/anim_command_play_mixed.h"
 
 
 class CSimulation : public ISimulation
@@ -25,6 +26,7 @@ private:
 	UiWindow m_UiWindow;
 	Skeleton m_Skeleton;
 	std::vector<Animation> m_Animations;
+	float m_MixedAnimationAlpha;
 
 	AnimationMontage m_Montage = AnimationMontage("WalkingMontage");
 
@@ -45,7 +47,6 @@ private:
 		}
 
 		m_Skeleton.SetupFamily();
-		m_UiWindow.SetSkeleton(&m_Skeleton);
 	}
 
 	void LoadAnimation(std::string&& name)
@@ -72,9 +73,14 @@ private:
 		const size_t walkingId = m_Montage.AddAnimation(m_Animations[0]);
 		const size_t runningId = m_Montage.AddAnimation(m_Animations[1]);
 
-		m_Montage.AddCommand(new AnimCmdPlay(m_Animations[0].GetDuration() * .7f, walkingId));
-		m_Montage.AddCommand(new AnimCmdCrossFade(1.f, walkingId, runningId));
-		m_Montage.AddCommand(new AnimCmdPlay(m_Animations[1].GetDuration() * .7f, runningId));
+		m_Montage.AddCommand(new AnimCmdPlayMixed(&m_MixedAnimationAlpha, walkingId, runningId));
+	}
+
+	void SetUiVariables()
+	{
+		m_UiWindow.SetSkeleton(&m_Skeleton);
+		m_UiWindow.SetAnimations(&m_Animations);
+		m_UiWindow.SetMixedAnimationAlpha(&m_MixedAnimationAlpha);
 	}
 
 	void Init() override
@@ -85,7 +91,7 @@ private:
 
 		LoadMontage();
 
-		m_UiWindow.SetAnimations(&m_Animations);
+		SetUiVariables();
 	}
 
 	void Update(const float frameTime) override

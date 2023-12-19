@@ -91,13 +91,20 @@ void Animation::Animate(const float deltaTime)
 	}
 	else
 	{
-		m_CrossFadeAlpha += deltaTime;
-		t = m_CrossFadeAlpha / m_CrossFadeAlphaMax;
-
-		if (m_CrossFadeAlpha > m_CrossFadeAlphaMax)
+		if (!m_IsCrossFadeAuto)
 		{
-			t = 1.f;
-			m_CrossFadeAlphaMax = -1.f;
+			t = m_CrossFadeAlphaMax;
+		}
+		else
+		{
+			m_CrossFadeAlpha += deltaTime;
+			t = m_CrossFadeAlpha / m_CrossFadeAlphaMax;
+
+			if (m_CrossFadeAlpha > m_CrossFadeAlphaMax)
+			{
+				t = 1.f;
+				m_CrossFadeAlphaMax = -1.f;
+			}
 		}
 	}
 
@@ -131,10 +138,12 @@ void Animation::Animate(const float deltaTime)
 	EngineExt::SetSkinningPose(matrices);
 }
 
-void Animation::StartCrossFade(const float alpha)
+void Animation::StartCrossFade(const float alpha, const bool isAuto)
 {
 	m_CrossFadeAlphaMax = alpha;
 	m_CrossFadeAlpha = 0.f;
+
+	m_IsCrossFadeAuto = isAuto;
 }
 
 void Animation::CrossFade(Animation& start, Animation& end, const float deltaTime)

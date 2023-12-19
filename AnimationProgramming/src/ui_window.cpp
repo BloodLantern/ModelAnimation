@@ -192,6 +192,11 @@ void UiWindow::DrawAnimations()
 
 	ImGui::Begin("Animations");
 
+	if (m_MixedAnimationAlpha)
+	{
+		ImGui::SliderFloat("Mixed alpha", m_MixedAnimationAlpha, 0.f, 1.f);
+	}
+
 	for (Animation& a : *m_Animations)
 	{
 		if (!ImGui::CollapsingHeader(a.GetName().c_str()))
@@ -261,7 +266,7 @@ void UiWindow::SetAnimations(std::vector<Animation>* animations)
 	m_Animations = animations;
 }
 
-void UiWindow::SetCurrentAnimation(size_t* currAnim)
+void UiWindow::SetMixedAnimationAlpha(float* alpha)
 {
-	m_CurrentAnimation = currAnim;
+	m_MixedAnimationAlpha = alpha;
 }
