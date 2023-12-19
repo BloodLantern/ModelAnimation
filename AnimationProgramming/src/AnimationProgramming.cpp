@@ -60,8 +60,6 @@ private:
 				EngineExt::GetAnimLocalBoneTransform(anim, (int) j, (int) i, p, r);
 
 				anim.AddKeyFrame(i, j, p, r);
-
-				// printf("%s : %d ; %d | %f ; %f ; %f | %f ; %f ; %f ; %f\n", anim.GetName().c_str(), i, j, p.x, p.y, p.z, r.real, r.imaginary.x, r.imaginary.y, r.imaginary.z);
 			}
 		}
 

@@ -183,6 +183,8 @@ void UiWindow::DrawAnimations()
 		if (!ImGui::CollapsingHeader(a.GetName().c_str()))
 			continue;
 
+		ImGui::PushID(&a);
+
 		const size_t keyCount = a.GetKeyCount();
 		ImGui::Text("Key count : %d", keyCount);
 		ImGui::SliderInt("Current frame", (int*)&a.CurrentFrame, 0, keyCount);
@@ -216,6 +218,8 @@ void UiWindow::DrawAnimations()
 
 			ImGui::TreePop();
 		}
+
+		ImGui::PopID();
 	}
 
 	ImGui::End();
