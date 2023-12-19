@@ -44,6 +44,7 @@
     <ClCompile Include="src\mesh.cpp" />
     <ClCompile Include="src\montage\animation_montage.cpp" />
     <ClCompile Include="src\montage\animation_montage_command.cpp" />
+    <ClCompile Include="src\montage\anim_command_cross_fade.cpp" />
     <ClCompile Include="src\montage\anim_command_play.cpp" />
     <ClCompile Include="src\montage\anim_command_wait.cpp" />
     <ClCompile Include="src\shader.cpp" />
@@ -82,6 +83,7 @@
     <ClInclude Include="include\mesh.h" />
     <ClInclude Include="include\montage\animation_montage.h" />
     <ClInclude Include="include\montage\animation_montage_command.h" />
+    <ClInclude Include="include\montage\anim_command_cross_fade.h" />
     <ClInclude Include="include\montage\anim_command_play.h" />
     <ClInclude Include="include\montage\anim_command_wait.h" />
     <ClInclude Include="include\shader.h" />

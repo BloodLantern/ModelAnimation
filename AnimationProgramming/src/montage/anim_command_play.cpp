@@ -12,10 +12,20 @@ bool AnimCmdPlay::OnUpdate(const float deltaTime)
 
 	m_Time += deltaTime;
 
-	if (m_Duration > 0.f && m_Time > m_Duration)
-		return true;
+	Animation& anim = m_Montage->GetAnimation(m_AnimationId);
 
-	m_Montage->GetAnimation(m_AnimationId).Animate(deltaTime);
+	if (m_Duration > 0.f)
+	{
+		if (m_Time > m_Duration)
+			return true;
+	}
+	else
+	{
+		if (m_Time > anim.GetDuration())
+			return true;
+	}
+
+	anim.Animate(deltaTime);
 
 	return false;
 }

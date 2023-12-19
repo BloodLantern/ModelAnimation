@@ -201,7 +201,7 @@ void UiWindow::DrawAnimations()
 
 		const size_t keyCount = a.GetKeyCount();
 		ImGui::Text("Key count : %d", keyCount);
-		ImGui::SliderInt("Current frame", (int*)&a.CurrentFrame, 0, keyCount);
+		ImGui::SliderInt("Current frame", (int*)&a.CurrentFrame, 0, keyCount - 1);
 		ImGui::Checkbox("Paused", &a.Paused);
 		ImGui::InputFloat("Delta modulation", &a.Speed, 0.1f, 1.f);
 

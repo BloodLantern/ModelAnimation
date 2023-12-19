@@ -16,6 +16,7 @@
 #include "montage/animation_montage.h"
 #include "montage/anim_command_play.h"
 #include "montage/anim_command_wait.h"
+#include "montage/anim_command_cross_fade.h"
 
 
 class CSimulation : public ISimulation
@@ -71,9 +72,9 @@ private:
 		const size_t walkingId = m_Montage.AddAnimation(m_Animations[0]);
 		const size_t runningId = m_Montage.AddAnimation(m_Animations[1]);
 
-		m_Montage.AddCommand(new AnimCmdPlay(1.f, walkingId));
-		m_Montage.AddCommand(new AnimCmdWait(.5f));
-		m_Montage.AddCommand(new AnimCmdPlay(1.f, runningId));
+		m_Montage.AddCommand(new AnimCmdPlay(m_Animations[0].GetDuration() * .7f, walkingId));
+		m_Montage.AddCommand(new AnimCmdCrossFade(1.f, walkingId, runningId));
+		m_Montage.AddCommand(new AnimCmdPlay(m_Animations[1].GetDuration() * .7f, runningId));
 	}
 
 	void Init() override

@@ -5,6 +5,7 @@
 
 class Animation
 {
+private:
 	std::string m_Name;
 	size_t m_KeyCount;
 	Skeleton* m_Skeleton;
@@ -18,6 +19,11 @@ class Animation
 	float m_Time = 0.f;
 	float m_Duration;
 
+	float m_CrossFadeAlphaMax;
+	float m_CrossFadeAlpha;
+
+	void UpdateTime(const float deltaTime);
+
 public:
 	size_t CurrentFrame = 0;
 	bool Paused = false;
@@ -29,8 +35,12 @@ public:
 	_NODISCARD size_t GetBoneCount() const;
 	_NODISCARD const std::string& GetName() const;
 	_NODISCARD const KeyFrame& GetKeyFrame(const size_t frame, const size_t boneIndex) const;
+	_NODISCARD float GetDuration() const;
 
 	void AddKeyFrame(const size_t frame, const size_t boneIndex, const Vector3& position, const Quaternion& rotation);
 
 	void Animate(const float deltaTime);
+	void StartCrossFade(const float alpha);
+
+	static void CrossFade(Animation& start, Animation& end, const float deltaTime);
 };
