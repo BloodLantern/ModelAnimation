@@ -28,9 +28,10 @@ void Bone::SetFamily(Bone* parent, std::vector<Bone*>& children)
 	m_Children = children;
 }
 
-void Bone::SetParent(Bone* parent)
+void Bone::SetParent(Bone* parent, const int parentId)
 {
 	m_Parent = parent;
+	m_ParentIndex = parentId;
 }
 
 void Bone::AddChild(Bone* child)
@@ -57,6 +58,11 @@ void Bone::ComputeMatrixes()
 _NODISCARD std::vector<Bone*>& Bone::GetChildren()
 {
 	return m_Children;
+}
+
+const int Bone::GetParentIndex() const
+{
+	return m_ParentIndex;
 }
 
 _NODISCARD const std::string& Bone::GetName() const

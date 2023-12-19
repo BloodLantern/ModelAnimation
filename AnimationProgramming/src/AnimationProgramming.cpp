@@ -5,6 +5,9 @@
 #include "Simulation.h"
 
 #include <thread>
+#include <iostream>
+
+#include "maths/matrix3x3.hpp"
 
 #include "ui_window.h"
 #include "skeleton.h"

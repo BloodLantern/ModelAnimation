@@ -89,14 +89,15 @@ void Animation::Animate(const float deltaTime)
 		const Quaternion rotation = Quaternion::Slerp(m_LastKeyFrames[i].GetRotation(), keyFrames[i].GetRotation(), t);
 		const Matrix4x4 transform = Matrix4x4::TRS(position, rotation, 1.f);
 		
-		const int parentIdx = GetSkeletonBoneParentIndex((int) i);
+		const int parentIdx = bone.GetParentIndex();
+		const Matrix4x4 localAnim = bone.GetLocalTransform() * transform;
 		if (parentIdx != -1)
 		{
-			animMatrices[i] = animMatrices[parentIdx] * bone.GetLocalTransform() * transform;
+			animMatrices[i] = animMatrices[parentIdx] * localAnim;
 		}
 		else
 		{
-			animMatrices[i] = bone.GetLocalTransform() * transform;
+			animMatrices[i] = localAnim;
 		}
 		
 		matrices[i] = (animMatrices[i] * bone.GetGlobalInvTransform()).Transpose();

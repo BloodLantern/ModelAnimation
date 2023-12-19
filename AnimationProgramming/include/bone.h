@@ -11,6 +11,7 @@ class Bone
 {
 private:
 	Bone* m_Parent;
+	int m_ParentIndex;
 	std::vector<Bone*> m_Children;
 
 	std::string m_Name;
@@ -30,12 +31,13 @@ public:
 	void ComputeTransform();
 
 	void SetFamily(Bone* parent, std::vector<Bone*>& children);
-	void SetParent(Bone* parent);
+	void SetParent(Bone* parent, const int parentId);
 	void AddChild(Bone* child);
 
 	void ComputeMatrixes();
 
 	_NODISCARD std::vector<Bone*>& GetChildren();
+	_NODISCARD const int GetParentIndex() const;
 	_NODISCARD const std::string& GetName() const;
 	_NODISCARD const Matrix4x4& GetLocalTransform() const;
 	_NODISCARD const Matrix4x4& GetGlobalTransform() const;

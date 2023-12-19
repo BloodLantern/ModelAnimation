@@ -48,12 +48,16 @@ void Skeleton::SetupFamily()
 	{
 		const int parentId = GetSkeletonBoneParentIndex(i);
 
-		if (parentId == -1)
-			continue;
+		if (parentId != -1)
+		{
+			m_Bones[i].SetParent(&m_Bones[parentId], parentId);
 
-		m_Bones[i].SetParent(&m_Bones[parentId]);
-
-		m_Bones[parentId].AddChild(&m_Bones[i]);
+			m_Bones[parentId].AddChild(&m_Bones[i]);
+		}
+		else
+		{
+			m_Bones[i].SetParent(nullptr, -1);
+		}
 	}
 
 	for (Bone& b : m_Bones)
