@@ -79,7 +79,9 @@ void Skeleton::Draw_Recursive(Bone& bone, const Vector3& parentPos)
 	const Vector4 p = bone.GetGlobalTransform() * v;
 	const Vector3 position = Vector3(p.x, p.y, p.z);
 
-	EngineExt::DrawLine(parentPos, position, Vector3(0.f));
+	if (parentPos != Vector3(0.f))
+		EngineExt::DrawLine(parentPos, position, Vector3(0.f));
+
 	for (Bone* b : bone.GetChildren())
 	{
 		Draw_Recursive(*b, position);
