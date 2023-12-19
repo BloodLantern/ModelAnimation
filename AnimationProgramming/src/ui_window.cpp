@@ -41,7 +41,7 @@ void UiWindow::Main()
 	glfwWindowHint(GLFW_SAMPLES, 8);
 	glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
-	GLFWwindow* window = glfwCreateWindow(1000, 1000, "UI", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(1, 1, "UI", NULL, NULL);
 
 	if (window == NULL)
 		return;
@@ -67,14 +67,14 @@ void UiWindow::Main()
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init(glslVersion);
 
-	/*m_Mesh = new Mesh("Resources/SK_Mannequin.msh");
+	m_Mesh = new Mesh("Resources/SK_Mannequin.msh");
 	m_Mesh->Forward();
 
-	m_Shader = new Shader("Resources", "skinning.vs", "skinning.ps");*/
+	m_Shader = new Shader("Resources", "skinning.vs", "skinning.ps");
 
 	// Show window
 	glfwShowWindow(window);
-	//glfwHideWindow(window);
+	glfwHideWindow(window);
 
 	while (!glfwWindowShouldClose(window) && !m_CloseWindow)
 	{
@@ -87,8 +87,8 @@ void UiWindow::Main()
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		/*m_Shader->Use();
-		m_Mesh->Draw();*/
+		m_Shader->Use();
+		m_Mesh->Draw();
 
 		DrawSkeletonHierarchy();
 		DrawCurrentBoneInfo();
@@ -114,8 +114,8 @@ void UiWindow::Main()
 		glfwSwapBuffers(window);
 	}
 
-	/*delete m_Shader;
-	delete m_Mesh;*/
+	delete m_Shader;
+	delete m_Mesh;
 
 	// Cleanup
 	ImGui_ImplOpenGL3_Shutdown();

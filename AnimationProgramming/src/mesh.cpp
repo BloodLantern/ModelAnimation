@@ -3,6 +3,8 @@
 #include <fstream>
 #include <iostream>
 
+#include "ImGui/imgui.h"
+
 // We could replicate the behavior of the engine's code but because there is
 // only one mesh being loaded in this format it is easier to hardcode this
 constexpr int VertexFormatSize = 56;
@@ -66,11 +68,11 @@ void Mesh::Forward()
     
     // Setup the vertex buffer
     glBindBuffer(GL_ARRAY_BUFFER, m_Vbo);
-    glBufferData(GL_ARRAY_BUFFER, m_Vertices.size() * VertexFormatSize, m_Vertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(m_Vertices.size()) * static_cast<GLsizeiptr>(sizeof(vec3)), m_Vertices.data(), GL_STATIC_DRAW);
 
     // Setup the index buffer
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Indices.size() * sizeof(unsigned int), m_Indices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(m_Indices.size()) * static_cast<GLsizeiptr>(sizeof(unsigned int)), m_Indices.data(), GL_STATIC_DRAW);
 
     // Generate VAO
     glGenVertexArrays(1, &m_Vao);
@@ -92,7 +94,19 @@ void Mesh::Draw() const
         return;
     
     glBindVertexArray(m_Vao);
+    if (const GLenum error = glGetError(); error != GL_NO_ERROR)
+    {
+        ImGui::Begin("OpenGL error");
+        ImGui::Text(reinterpret_cast<const char*>(glGetString(error)));
+        ImGui::End();
+    }
     glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(m_Vertices.size()));
+    if (const GLenum error = glGetError(); error != GL_NO_ERROR)
+    {
+        ImGui::Begin("OpenGL error");
+        ImGui::Text(reinterpret_cast<const char*>(glGetString(error)));
+        ImGui::End();
+    }
 }
 
 bool Mesh::IsLoaded() const
@@ -107,22 +121,20 @@ void Mesh::LoadGltfFormat(std::ifstream& file)
 void Mesh::LoadEngineFormat(std::ifstream& file)
 {
     file.seekg(0);
-    
-    std::cout << "stream pos: " << file.tellg() << ":" << file.peek() << '\n';
 
     int vertexCount;
     file.read(reinterpret_cast<char*>(&vertexCount), sizeof(vertexCount));
-    
-    std::cout << "stream pos: " << file.tellg() << ":" << file.peek() << '\n';
 
-    std::cout << "Vertices: " << vertexCount << '\n';
+    // Skip the engine's flags
+    file.seekg(sizeof(int) * 2ll, std::ios_base::cur);
 
     m_Vertices.resize(vertexCount);
 
     const unsigned int verticesSize = vertexCount * VertexFormatSize;
     char* vertices = static_cast<char*>(_malloca(verticesSize));
     file.read(vertices, verticesSize);
-    std::memcpy(m_Vertices.data(), vertices, verticesSize);
+    for (int i = 0; i < vertexCount; i++)
+        m_Vertices[i] = *reinterpret_cast<vec3*>(vertices + i * VertexFormatSize);
     _freea(vertices);
 
     int partCount;
@@ -134,14 +146,17 @@ void Mesh::LoadEngineFormat(std::ifstream& file)
         file.read(reinterpret_cast<char*>(&indexCount), sizeof(indexCount));
 
         const size_t oldIndicesSize = m_Indices.size();
-        m_Indices.reserve(indexCount);
+        m_Indices.resize(m_Indices.size() + indexCount);
         
         const unsigned int indicesSize = indexCount * sizeof(unsigned int);
         char* indices = static_cast<char*>(_malloca(indicesSize));
         file.read(indices, indicesSize);
+        /*for (int j = 0; j < indexCount; j++)
+            m_Indices[j + oldIndicesSize] = reinterpret_cast<int*>(indices)[j];*/
         std::memcpy(reinterpret_cast<char*>(m_Indices.data()) + oldIndicesSize, indices, indicesSize);
         _freea(indices);
 
-        // Here we should read the material but this mesh doesn't have one
+        // Here we should read the material but this mesh doesn't have one so we just skip 4 bytes (material name length == 0)
+        file.seekg(sizeof(int), std::ios_base::cur);
     }
 }
