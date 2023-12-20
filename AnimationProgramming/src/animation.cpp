@@ -5,31 +5,6 @@
 
 #include "maths/calc.hpp"
 
-void Animation::UpdateTime(const float deltaTime)
-{
-	if (Paused)
-		return;
-
-	m_Time += deltaTime * Speed;
-	m_Time = std::fmodf(m_Time, m_Duration);
-
-	const size_t lastFrame = CurrentFrame;
-	CurrentFrame = (size_t)(m_Time / m_FrameDuration);
-
-	if (Speed >= 0.f)
-	{
-		m_Time = std::fmodf(m_Time, m_Duration);
-	}
-	else
-	{
-		if (m_Time <= 0)
-			m_Time = m_Duration - m_FrameDuration;
-	}
-
-	if (lastFrame != CurrentFrame)
-		m_LastKeyFrames = m_KeyFrames[lastFrame];
-}
-
 Animation::Animation(std::string&& name, const size_t keyCount, Skeleton* skeleton)
 	: m_Name(std::move(name))
 	, m_KeyCount(keyCount)
@@ -38,7 +13,6 @@ Animation::Animation(std::string&& name, const size_t keyCount, Skeleton* skelet
 	, m_Duration((float) keyCount * m_FrameDuration)
 {
 	m_KeyFrames.resize(keyCount);
-	m_LastKeyFrames.resize(skeleton->GetBoneCount());
 
 	for (size_t i = 0; i < keyCount; i++)
 		m_KeyFrames[i].resize(skeleton->GetBoneCount());
@@ -76,10 +50,35 @@ void Animation::AddKeyFrame(const size_t frame, const size_t boneIndex, const Ve
 	m_KeyFrames[frame][boneIndex] = KeyFrame(position, rotation);
 }
 
+void Animation::UpdateTime(const float deltaTime)
+{
+	if (Paused)
+		return;
+
+	m_Time += deltaTime * Speed;
+	m_Time = std::fmodf(m_Time, m_Duration);
+
+	const size_t lastFrame = CurrentFrame;
+	CurrentFrame = (size_t)(m_Time / m_FrameDuration);
+
+	if (Speed >= 0.f)
+	{
+		m_Time = std::fmodf(m_Time, m_Duration);
+	}
+	else
+	{
+		if (m_Time <= 0)
+			m_Time = m_Duration - m_FrameDuration;
+	}
+
+	if (lastFrame != CurrentFrame)
+		m_LastKeyFrames = m_KeyFrames[lastFrame];
+}
+
 void Animation::Animate(const float deltaTime)
 {
 	UpdateTime(deltaTime);
-
+	
 	const size_t boneCount = GetBoneCount();
 
 	float t;

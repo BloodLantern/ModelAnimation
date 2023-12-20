@@ -74,6 +74,7 @@ private:
 		const size_t runningId = m_Montage.AddAnimation(m_Animations[1]);
 
 		m_Montage.AddCommand(new AnimCmdPlayMixed(&m_MixedAnimationAlpha, walkingId, runningId));
+		// m_Montage.AddCommand(new AnimCmdPlay(-1.f, walkingId));
 	}
 
 	void SetUiVariables()
