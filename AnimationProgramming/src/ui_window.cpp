@@ -6,19 +6,23 @@
 #include "ImGui/imgui_impl_glfw.h"
 #include "ImGui/imgui_impl_opengl3.h"
 
+#include "animation_programming.h"
+
 #include <iostream>
+#include <numbers>
 #include <thread>
+
 
 UiWindow::UiWindow()
 {
-	StartThread();
-}
+	m_Skeleton.Load("Resources/ThirdPersonWalk.skel");
 
-UiWindow::~UiWindow()
-{
-	// Called when the main window is closed, forcefully close the UI window and join the thread
-	m_CloseWindow = true;
-	EndThread();
+	for (Bone& bone : m_Skeleton.GetBones())
+		bone.ComputeTransform();
+
+	m_Skeleton.SetupFamily();
+	
+	Main();
 }
 
 void UiWindow::Main()
@@ -27,7 +31,7 @@ void UiWindow::Main()
 	glfwSetErrorCallback(
 		[](int error, const char* description)
 		{
-			std::cerr << "GLFW error " << error << ": " << description << std::endl;
+			std::cerr << "GLFW error " << error << ": " << description << '\n';
 		}
 	);
 
@@ -41,7 +45,7 @@ void UiWindow::Main()
 	glfwWindowHint(GLFW_SAMPLES, 8);
 	glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
-	GLFWwindow* window = glfwCreateWindow(1, 1, "UI", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(1280, 720, "UI", NULL, NULL);
 
 	if (window == NULL)
 		return;
@@ -70,13 +74,13 @@ void UiWindow::Main()
 	m_Mesh = new Mesh("Resources/SK_Mannequin.msh");
 	m_Mesh->Forward();
 
-	m_Shader = new Shader("Resources", "skinning.vs", "skinning.ps");
+	m_Shader = new Shader("Resources", "shader.vs", "shader.fs");
 
 	// Show window
 	glfwShowWindow(window);
-	glfwHideWindow(window);
+	//glfwHideWindow(window);
 
-	while (!glfwWindowShouldClose(window) && !m_CloseWindow)
+	while (!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
 
@@ -86,6 +90,17 @@ void UiWindow::Main()
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+
+		m_Shader->SetUniform("modelViewMatrix", Matrix4x4::TRS(vec3(0.f, 0.f, 10.f), vec3(0.f), 1.f));
+		Matrix4x4 projection;
+		Matrix4x4::PerspectiveProjectionMatrix(std::numbers::pi_v<float> / 2.f, 16.f / 9.f, 0.01f, 1000.f, projection);
+		m_Shader->SetUniform("projectionMatrix", projection);
+		
+		if (m_Skeleton.GetBoneCount() > 0)
+		{
+			for (int i = 0; i < 64; i++)
+				m_Shader->SetUniform(std::string("skin[") + std::to_string(i) + "]", m_Skeleton.GetBone(i).GetGlobalTransform());
+		}
 
 		m_Shader->Use();
 		m_Mesh->Draw();
@@ -126,24 +141,12 @@ void UiWindow::Main()
 	glfwTerminate();
 }
 
-void UiWindow::StartThread()
+
+
+
+void UiWindow::DrawBoneInSkeletonHierarchy(Bone& parentBone)
 {
-	m_CloseWindow = false;
-	m_Thread = std::thread(&UiWindow::Main, this);
-}
-
-void UiWindow::EndThread()
-{
-	if (m_Thread.joinable())
-		m_Thread.join();
-}
-
-
-
-
-void UiWindow::DrawBoneInSkeletonHierarchy(Bone& bone)
-{
-	for (Bone* const bone : bone.GetChildren())
+	for (Bone* const bone : parentBone.GetChildren())
 	{
 		if (!ImGui::TreeNodeEx(bone->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow))
 			continue;
@@ -225,7 +228,7 @@ void UiWindow::DrawAnimations()
 
 				const KeyFrame& keyFrame = a.GetKeyFrame(i, j);
 
-				ImGui::Text("%s", m_Skeleton->GetBone(j).GetName().c_str());
+				ImGui::Text("%s", m_Skeleton.GetBone(j).GetName().c_str());
 
 				ImGui::BeginDisabled();
 				ImGui::InputFloat3("Position", &const_cast<Vector3&>(keyFrame.GetPosition()).x);
@@ -246,19 +249,11 @@ void UiWindow::DrawAnimations()
 
 void UiWindow::DrawSkeletonHierarchy()
 {
-	if (!m_Skeleton)
-		return;
-
 	ImGui::Begin("Skeleton");
 
-	DrawBoneInSkeletonHierarchy(m_Skeleton->GetRoot());
+	DrawBoneInSkeletonHierarchy(m_Skeleton.GetRoot());
 
 	ImGui::End();
-}
-
-void UiWindow::SetSkeleton(Skeleton* skeleton)
-{
-	m_Skeleton = skeleton;
 }
 
 void UiWindow::SetAnimations(std::vector<Animation>* animations)

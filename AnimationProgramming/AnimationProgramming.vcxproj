@@ -41,6 +41,85 @@
     <ClCompile Include="externals\include\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="src\Engine_extensions.cpp" />
     <ClCompile Include="src\key_frame.cpp" />
+    <ClCompile Include="src\main.cpp">
+      <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <AssemblerOutput>NoListing</AssemblerOutput>
+      <AssemblerListingLocation>Debug\</AssemblerListingLocation>
+      <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
+      <BrowseInformation>false</BrowseInformation>
+      <BrowseInformationFile>Debug\</BrowseInformationFile>
+      <CompileAs>Default</CompileAs>
+      <ConformanceMode>Default</ConformanceMode>
+      <DiagnosticsFormat>Column</DiagnosticsFormat>
+      <DisableLanguageExtensions>false</DisableLanguageExtensions>
+      <ErrorReporting>Prompt</ErrorReporting>
+      <ExpandAttributedSource>false</ExpandAttributedSource>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <EnableASAN>false</EnableASAN>
+      <EnableFuzzer>false</EnableFuzzer>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <GenerateModuleDependencies>false</GenerateModuleDependencies>
+      <GenerateSourceDependencies>false</GenerateSourceDependencies>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ModuleDependenciesFile>Debug\</ModuleDependenciesFile>
+      <ModuleOutputFile>Debug\</ModuleOutputFile>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <ObjectFileName>Debug\</ObjectFileName>
+      <CallingConvention>Cdecl</CallingConvention>
+      <ProgramDataBaseFileName>Debug\vc143.pdb</ProgramDataBaseFileName>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>Debug\AnimationProgramming.pch</PrecompiledHeaderOutputFile>
+      <PreprocessToFile>false</PreprocessToFile>
+      <PreprocessKeepComments>false</PreprocessKeepComments>
+      <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
+      <RemoveUnreferencedCodeData>true</RemoveUnreferencedCodeData>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ShowIncludes>false</ShowIncludes>
+      <SourceDependenciesFile>Debug\</SourceDependenciesFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <SpectreMitigation>false</SpectreMitigation>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <TrackerLogDirectory>Debug\Animatio.551567FE.tlog\</TrackerLogDirectory>
+      <TranslateIncludes>false</TranslateIncludes>
+      <MinimalRebuildFromTracking>true</MinimalRebuildFromTracking>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <UseFullPaths>true</UseFullPaths>
+      <WarningLevel>Level2</WarningLevel>
+      <XMLDocumentationFileName>Debug\</XMLDocumentationFileName>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <IntelJCCErratum>false</IntelJCCErratum>
+      <BuildStlModules>false</BuildStlModules>
+      <TreatAngleIncludeAsExternal>false</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>InheritWarningLevel</ExternalWarningLevel>
+      <TreatExternalTemplatesAsInternal>true</TreatExternalTemplatesAsInternal>
+      <DisableAnalyzeExternal>false</DisableAnalyzeExternal>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_UNICODE;UNICODE;</PreprocessorDefinitions>
+      <EnablePREfast>false</EnablePREfast>
+      <OmitFramePointers>false</OmitFramePointers>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\m.grimardhamel\source\repos\AnimationProgramming\AnimationProgramming\include;C:\Users\m.grimardhamel\source\repos\AnimationProgramming\AnimationProgramming\externals\include;</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LinkCompiled>true</LinkCompiled>
+    </ClCompile>
     <ClCompile Include="src\mesh.cpp" />
     <ClCompile Include="src\montage\animation_montage.cpp" />
     <ClCompile Include="src\montage\animation_montage_command.cpp" />
@@ -50,7 +129,7 @@
     <ClCompile Include="src\montage\anim_command_wait.cpp" />
     <ClCompile Include="src\shader.cpp" />
     <ClCompile Include="src\skeleton.cpp" />
-    <ClCompile Include="src\AnimationProgramming.cpp" />
+    <ClCompile Include="src\animation_programming.cpp" />
     <ClCompile Include="src\ui_window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +146,7 @@
     <ClInclude Include="externals\include\maths\vector3.hpp" />
     <ClInclude Include="externals\include\maths\vector4.hpp" />
     <ClInclude Include="include\animation.h" />
+    <ClInclude Include="include\animation_programming.h" />
     <ClInclude Include="include\bone.h" />
     <ClInclude Include="externals\include\ImGui\imconfig.h" />
     <ClInclude Include="externals\include\ImGui\imgui.h" />
@@ -93,6 +173,20 @@
     <ClInclude Include="include\targetver.h" />
     <ClInclude Include="include\ui_window.h" />
     <ClInclude Include="include\skeleton.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Data\Resources\shader.vs" />
+    <Content Include="..\Data\Resources\skinning.program" />
+    <Content Include="..\Data\Resources\skinning.ps" />
+    <Content Include="..\Data\Resources\skinning.vs" />
+    <Content Include="..\Data\Resources\SK_Mannequin.msh" />
+    <Content Include="..\Data\Resources\ThirdPersonRun.anim" />
+    <Content Include="..\Data\Resources\ThirdPersonRun.skel" />
+    <Content Include="..\Data\Resources\ThirdPersonWalk.anim" />
+    <Content Include="..\Data\Resources\ThirdPersonWalk.skel" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Data\Resources\shader.fs" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{551567FE-4862-404E-8E15-7C2E35823078}</ProjectGuid>

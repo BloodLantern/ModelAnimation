@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "ImGui/imgui.h"
+#include "maths/vector4.hpp"
 
 // We could replicate the behavior of the engine's code but because there is
 // only one mesh being loaded in this format it is easier to hardcode this
@@ -78,8 +78,12 @@ void Mesh::Forward()
     glGenVertexArrays(1, &m_Vao);
     glBindVertexArray(m_Vao);
     
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, VertexFormatSize, nullptr);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(vec3), nullptr);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 4, GL_FLOAT, false, sizeof(vec4), reinterpret_cast<void*>(sizeof(vec3) * 2));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 4, GL_FLOAT, false, sizeof(vec4), reinterpret_cast<void*>(sizeof(vec3) * 2 + sizeof(vec4)));
+    glEnableVertexAttribArray(2);
 
     // Unbind the VAO
     glBindVertexArray(0);
@@ -94,19 +98,7 @@ void Mesh::Draw() const
         return;
     
     glBindVertexArray(m_Vao);
-    if (const GLenum error = glGetError(); error != GL_NO_ERROR)
-    {
-        ImGui::Begin("OpenGL error");
-        ImGui::Text(reinterpret_cast<const char*>(glGetString(error)));
-        ImGui::End();
-    }
     glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(m_Vertices.size()));
-    if (const GLenum error = glGetError(); error != GL_NO_ERROR)
-    {
-        ImGui::Begin("OpenGL error");
-        ImGui::Text(reinterpret_cast<const char*>(glGetString(error)));
-        ImGui::End();
-    }
 }
 
 bool Mesh::IsLoaded() const

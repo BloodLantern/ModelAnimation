@@ -3,8 +3,6 @@
 #include <fstream>
 #include <iostream>
 
-constexpr const char* ShaderHeader = "#version 460\n";
-
 Shader::Shader(const std::filesystem::path& folder, const std::string& vertexName, const std::string& fragmentName)
 {
     const std::filesystem::path newFolder = relative(folder);
@@ -91,11 +89,6 @@ bool Shader::Load(const std::filesystem::path &filepath)
     }
 
     m_Source = std::string(std::istreambuf_iterator(file), std::istreambuf_iterator<char>());
-
-    // We need to add the #version shader header manually because the engine does so
-    // therefore we can't modify the shader source file
-    std::string header(ShaderHeader);
-    m_Source.insert(m_Source.begin(), header.begin(), header.end());
     
     return true;
 }
@@ -141,7 +134,7 @@ void Shader::Use() const
     glUseProgram(m_Program);
 }
 
-unsigned Shader::GetUniform(const std::string& name) const
+unsigned int Shader::GetUniform(const std::string& name) const
 {
     return glGetUniformLocation(m_Program, name.c_str());
 }

@@ -14,14 +14,14 @@ smooth out vec3 outNormal;
 
 uniform SceneMatrices
 {
-	uniform mat4 projectionMatrix;
+	mat4 projectionMatrix;
 } sm;
 
 uniform mat4 modelViewMatrix;
 
 uniform SkinningMatrices
 {
-	uniform mat4 mat[64];
+	mat4 mat[64];
 } skin;
 
 

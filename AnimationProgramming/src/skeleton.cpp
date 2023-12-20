@@ -1,9 +1,9 @@
 #include "skeleton.h"
 #include <cassert>
+#include <fstream>
 #include <iostream>
 
-#include "Engine.h"
-#include "Engine_extensions.h"
+#include "ImGui/imgui_impl_opengl3_loader.h"
 
 void Skeleton::Reserve(const size_t nbr)
 {
@@ -46,7 +46,7 @@ void Skeleton::SetupFamily()
 {
 	for (size_t i = 0; i < m_Bones.size(); i++)
 	{
-		const int parentId = GetSkeletonBoneParentIndex(i);
+		const int parentId = m_Bones[i].GetParentIndex();
 
 		if (parentId != -1)
 		{
@@ -62,28 +62,65 @@ void Skeleton::SetupFamily()
 
 	for (Bone& b : m_Bones)
 	{
-		b.ComputeMatrixes();
+		b.ComputeMatrices();
 	}
 }
 
 void Skeleton::Draw()
 {
 	Bone& root = GetRoot();
-	Draw_Recursive(root, Vector3(0.f));
+	DrawRecursive(root, Vector3(0.f));
 }
 
-void Skeleton::Draw_Recursive(Bone& bone, const Vector3& parentPos)
+void Skeleton::Load(const std::string& filename)
+{
+	std::ifstream file(filename, std::ios::in | std::ios::binary);
+
+	int boneCount;
+	file.read(reinterpret_cast<char*>(&boneCount), sizeof(boneCount));
+	m_Bones.resize(boneCount);
+
+	for (int i = 0; i < boneCount; i++)
+	{
+		size_t stringLength;
+		file.read(reinterpret_cast<char*>(&stringLength), sizeof(stringLength));
+		std::string boneName;
+		boneName.resize(stringLength);
+		file.read(boneName.data(), stringLength);
+
+		int boneIndex, parentIndex;
+		file.read(reinterpret_cast<char*>(&boneIndex), sizeof(boneIndex));
+		file.read(reinterpret_cast<char*>(&parentIndex), sizeof(parentIndex));
+
+		m_Bones[i] = Bone(boneName, boneIndex, parentIndex);
+	}
+
+	for (Bone& bone : m_Bones)
+	{
+		file.read(reinterpret_cast<char*>(&bone.Position), sizeof(bone.Position));
+		file.read(reinterpret_cast<char*>(&bone.Rotation), sizeof(bone.Rotation));
+		// Skip the bone scale as we don't need it
+		file.seekg(sizeof(vec3), std::ios_base::cur);
+	}
+}
+
+std::vector<Bone>& Skeleton::GetBones()
+{
+	return m_Bones;
+}
+
+void Skeleton::DrawRecursive(Bone& bone, const Vector3& parentPos)
 {
 	constexpr Vector4 v(0.f, 0.f, 0.f, 1.f);
 	
 	const Vector4 p = bone.GetGlobalTransform() * v;
 	const Vector3 position = Vector3(p.x, p.y, p.z);
 
-	if (parentPos != Vector3(0.f))
-		EngineExt::DrawLine(parentPos, position, Vector3(0.f));
+	/*if (parentPos != Vector3(0.f))
+		EngineExt::DrawLine(parentPos, position, Vector3(0.f));*/
 
 	for (Bone* b : bone.GetChildren())
 	{
-		Draw_Recursive(*b, position);
+		DrawRecursive(*b, position);
 	}
 }

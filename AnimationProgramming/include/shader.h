@@ -54,5 +54,5 @@ private:
     void Unload();
     static void Unload(unsigned int& shader);
 
-    [[nodiscard]] __forceinline unsigned int GetUniform(const std::string& name) const;
+    _NODISCARD unsigned int GetUniform(const std::string& name) const;
 };

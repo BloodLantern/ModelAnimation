@@ -12,6 +12,7 @@ class Bone
 private:
 	Bone* m_Parent;
 	int m_ParentIndex;
+	int m_Index;
 	std::vector<Bone*> m_Children;
 
 	std::string m_Name;
@@ -27,6 +28,7 @@ public:
 	Bone();
 	Bone(const std::string& name);
 	Bone(const std::string& name, const Vector3& position, const Quaternion& rotation);
+	Bone(const std::string& name, int index, int parentIndex);
 
 	void ComputeTransform();
 
@@ -34,7 +36,7 @@ public:
 	void SetParent(Bone* parent, const int parentId);
 	void AddChild(Bone* child);
 
-	void ComputeMatrixes();
+	void ComputeMatrices();
 
 	_NODISCARD std::vector<Bone*>& GetChildren();
 	_NODISCARD const int GetParentIndex() const;

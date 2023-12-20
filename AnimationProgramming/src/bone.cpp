@@ -2,19 +2,33 @@
 #include <iostream>
 
 Bone::Bone()
-	: m_Name(""), m_Parent(nullptr), m_LocalTrs(Matrix4x4::Identity())
+	: m_Parent(nullptr)
+	, m_Name("")
+	, m_LocalTrs(Matrix4x4::Identity())
 {
 }
 
 Bone::Bone(const std::string& name)
-	: m_Name(name), m_Parent(nullptr), m_LocalTrs(Matrix4x4::Identity())
+	: m_Parent(nullptr)
+	, m_Name(name)
+	, m_LocalTrs(Matrix4x4::Identity())
 {
 }
 
 Bone::Bone(const std::string& name, const Vector3& position, const Quaternion& rotation)
-	: m_Name(name), m_Parent(nullptr), Position(position), Rotation(rotation)
+	: m_Parent(nullptr)
+	, m_Name(name)
+	, Position(position)
+	, Rotation(rotation)
 {
 	m_LocalTrs = Matrix4x4::TRS(position, rotation, Vector3(1.f));
+}
+
+Bone::Bone(const std::string& name, int index, int parentIndex)
+	: m_ParentIndex(parentIndex)
+	, m_Index(index)
+	, m_Name(name)
+{
 }
 
 void Bone::ComputeTransform()
@@ -39,7 +53,7 @@ void Bone::AddChild(Bone* child)
 	m_Children.push_back(child);
 }
 
-void Bone::ComputeMatrixes()
+void Bone::ComputeMatrices()
 {
 	Bone* parent = m_Parent;
 

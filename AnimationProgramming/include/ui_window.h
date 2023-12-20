@@ -6,17 +6,19 @@
 #include "animation.h"
 #include "mesh.h"
 #include "shader.h"
+#include "montage/animation_montage.h"
+
+class CSimulation;
 
 class UiWindow
 {
-	std::thread m_Thread;
-	bool m_CloseWindow;
-
 	int32_t m_WindowX;
 	int32_t m_WindowY;
 
-	Skeleton* m_Skeleton;
+	Skeleton m_Skeleton;
 	Bone* m_SelectedBone;
+
+	AnimationMontage m_Montage = AnimationMontage("WalkingMontage");
 
 	std::vector<Animation>* m_Animations;
 	float* m_MixedAnimationAlpha;
@@ -25,19 +27,15 @@ class UiWindow
 	Shader* m_Shader;
 
 	void Main();
-	void StartThread();
-	void EndThread();
 
 	void DrawSkeletonHierarchy();
-	void DrawBoneInSkeletonHierarchy(Bone& bone);
+	void DrawBoneInSkeletonHierarchy(Bone& parentBone);
 	void DrawCurrentBoneInfo() const;
 	void DrawAnimations();
 
 public:
 	UiWindow();
-	~UiWindow();
 
-	void SetSkeleton(Skeleton* skeleton);
 	void SetAnimations(std::vector<Animation>* animations);
 	void SetMixedAnimationAlpha(float* alpha);
 
