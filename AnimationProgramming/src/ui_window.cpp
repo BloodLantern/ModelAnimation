@@ -20,9 +20,28 @@ UiWindow::UiWindow()
 	for (Bone& bone : m_Skeleton.GetBones())
 		bone.ComputeTransform();
 
-	m_Skeleton.SetupFamily();
-	
-	Main();
+	// m_Skeleton.SetupFamily();
+	StartThread();
+	// Main();
+}
+
+UiWindow::~UiWindow()
+{
+	// Called when the main window is closed, forcefully close the UI window and join the thread
+	m_CloseWindow = true;
+	EndThread();
+}
+
+void UiWindow::StartThread()
+{
+    m_CloseWindow = false;
+    m_Thread = std::thread(&UiWindow::Main, this);
+}
+
+void UiWindow::EndThread()
+{
+    if (m_Thread.joinable())
+        m_Thread.join();
 }
 
 void UiWindow::Main()

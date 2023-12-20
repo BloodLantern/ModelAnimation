@@ -12,6 +12,7 @@ class CSimulation;
 
 class UiWindow
 {
+private:
 	int32_t m_WindowX;
 	int32_t m_WindowY;
 
@@ -26,6 +27,10 @@ class UiWindow
 	Mesh* m_Mesh;
 	Shader* m_Shader;
 
+	std::thread m_Thread;
+
+	bool m_CloseWindow;
+
 	void Main();
 
 	void DrawSkeletonHierarchy();
@@ -33,8 +38,12 @@ class UiWindow
 	void DrawCurrentBoneInfo() const;
 	void DrawAnimations();
 
+	void StartThread();
+	void EndThread();
+
 public:
 	UiWindow();
+	~UiWindow();
 
 	void SetAnimations(std::vector<Animation>* animations);
 	void SetMixedAnimationAlpha(float* alpha);

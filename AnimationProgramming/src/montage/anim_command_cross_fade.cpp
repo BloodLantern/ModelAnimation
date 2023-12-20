@@ -5,7 +5,7 @@
 
 AnimCmdCrossFade::AnimCmdCrossFade(const float duration, const size_t startAnimId, const size_t endAnimId)
 	: AnimationMontageCommand("Cross fade"), m_Duration(duration),
-	  m_StartAnimationId(startAnimId), m_EndAnimationId(endAnimId)
+	  m_StartAnimationId(startAnimId), m_EndAnimationId(endAnimId), m_NormalizedTimeScale(0.f)
 {
 }
 

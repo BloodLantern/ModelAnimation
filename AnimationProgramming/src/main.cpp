@@ -1,12 +1,12 @@
-﻿#include "animation_programming.h"
+#include "animation_programming.h"
 
 int main()
 {
-    /*CSimulation simulation;
+    CSimulation simulation;
 
-    Run(&simulation, 1400, 800);*/
+    Run(&simulation, 1400, 800);
 
-    UiWindow window;
+    // UiWindow window;
 
     return 0;
 }

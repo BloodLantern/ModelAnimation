@@ -1,4 +1,6 @@
 #include "skeleton.h"
+#include "Engine.h"
+#include "Engine_extensions.h"
 #include <cassert>
 #include <fstream>
 #include <iostream>
@@ -46,7 +48,7 @@ void Skeleton::SetupFamily()
 {
 	for (size_t i = 0; i < m_Bones.size(); i++)
 	{
-		const int parentId = m_Bones[i].GetParentIndex();
+		const int parentId = GetSkeletonBoneParentIndex(i);
 
 		if (parentId != -1)
 		{
@@ -116,8 +118,8 @@ void Skeleton::DrawRecursive(Bone& bone, const Vector3& parentPos)
 	const Vector4 p = bone.GetGlobalTransform() * v;
 	const Vector3 position = Vector3(p.x, p.y, p.z);
 
-	/*if (parentPos != Vector3(0.f))
-		EngineExt::DrawLine(parentPos, position, Vector3(0.f));*/
+	if (parentPos != Vector3(0.f))
+		EngineExt::DrawLine(parentPos, position, Vector3(0.f));
 
 	for (Bone* b : bone.GetChildren())
 	{
