@@ -40,11 +40,13 @@
     <ClCompile Include="externals\include\ImGui\imgui_tables.cpp" />
     <ClCompile Include="externals\include\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="src\Engine_extensions.cpp" />
-    <ClCompile Include="src\gltf\accessor.cpp" />
-    <ClCompile Include="src\gltf\animation.cpp" />
+    <ClCompile Include="src\gltf\chunk_accessor.cpp" />
+    <ClCompile Include="src\gltf\chunk_animation.cpp" />
+    <ClCompile Include="src\gltf\channel.cpp" />
     <ClCompile Include="src\gltf\chunk.cpp" />
     <ClCompile Include="src\gltf\gltf.cpp"/>
     <ClCompile Include="src\gltf\sampler.cpp" />
+    <ClCompile Include="src\gltf\target.cpp" />
     <ClCompile Include="src\key_frame.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mesh.cpp" />
@@ -87,8 +89,8 @@
     <ClInclude Include="externals\include\stb_image.h" />
     <ClInclude Include="include\Engine.h" />
     <ClInclude Include="include\Engine_extensions.h" />
-    <ClInclude Include="include\gltf\accessor.h" />
-    <ClInclude Include="include\gltf\animation.h" />
+    <ClInclude Include="include\gltf\chunk_accessor.h" />
+    <ClInclude Include="include\gltf\chunk_animation.h" />
     <ClInclude Include="include\gltf\channel.h" />
     <ClInclude Include="include\gltf\chunk.h" />
     <ClInclude Include="include\gltf\gltf.h" />
@@ -196,7 +198,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level2</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>RAPIDJSON_NOMEMBERITERATORCLASS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)externals\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -205,7 +207,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>../Data;$(ProjectDir)\externals\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>../Data;$(ProjectDir)\externals\libs\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Engine.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -215,7 +217,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>NOENGINE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOENGINE;RAPIDJSON_NOMEMBERITERATORCLASS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)externals\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -236,7 +238,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>RAPIDJSON_NOMEMBERITERATORCLASS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)externals\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -259,7 +261,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NOENGINE;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOENGINE;RAPIDJSON_NOMEMBERITERATORCLASS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)externals\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

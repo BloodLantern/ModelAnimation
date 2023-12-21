@@ -28,7 +28,7 @@ bool Chunk::Load(std::ifstream& file)
     return true;
 }
 
-bool Chunk::LoadJson(std::ifstream& file)
+void Chunk::LoadJson(std::ifstream& file)
 {
     std::string data;
     data.resize(length);
@@ -43,7 +43,7 @@ bool Chunk::LoadJson(std::ifstream& file)
     accessors.resize(array.Size());
     for (unsigned int i = 0; i < array.Size(); i++)
     {
-        Accessor accessor;
+        ChunkAccessor accessor;
         accessor.Load(array[i]);
         accessors[i] = accessor;
     }
@@ -52,12 +52,12 @@ bool Chunk::LoadJson(std::ifstream& file)
     animations.resize(array.Size());
     for (unsigned int i = 0; i < array.Size(); i++)
     {
-        Animation animation;
+        ChunkAnimation animation;
         animation.Load(array[i]);
         animations[i] = animation;
     }
 }
 
-bool Chunk::LoadBin(std::ifstream& file)
+void Chunk::LoadBin(std::ifstream& file)
 {
 }

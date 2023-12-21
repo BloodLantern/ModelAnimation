@@ -1,8 +1,8 @@
-﻿#include "gltf/accessor.h"
+﻿#include "..\..\include\gltf\chunk_accessor.h"
 
 #include <string>
 
-void Accessor::Load(const rapidjson::Value& object)
+void ChunkAccessor::Load(const rapidjson::Value& object)
 {
     if (object.HasMember("bufferView"))
         bufferView = object["bufferView"].GetInt();
@@ -19,15 +19,15 @@ void Accessor::Load(const rapidjson::Value& object)
     
     type = object["type"].GetString();
 
-    auto&& array = object["max"].GetArray();
-    max.resize(array.Size());
-    for (unsigned int i = 0; i < array.Size(); i++)
-        max[i] = array[i].GetFloat();
+    const auto& maxArray = object["max"].GetArray();
+    max.resize(maxArray.Size());
+    for (unsigned int i = 0; i < maxArray.Size(); i++)
+        max[i] = maxArray[i].GetFloat();
 
-    array = object["min"].GetArray();
-    min.resize(array.Size());
-    for (unsigned int i = 0; i < array.Size(); i++)
-        min[i] = array[i].GetFloat();
+    const auto& minArray = object["min"].GetArray();
+    min.resize(minArray.Size());
+    for (unsigned int i = 0; i < minArray.Size(); i++)
+        min[i] = minArray[i].GetFloat();
     
     name = object["name"].GetString();
 }

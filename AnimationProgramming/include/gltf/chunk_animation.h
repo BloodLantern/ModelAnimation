@@ -7,7 +7,7 @@
 #include "channel.h"
 #include "sampler.h"
 
-class Animation
+class ChunkAnimation
 {
 public:
     std::vector<Channel> channels;

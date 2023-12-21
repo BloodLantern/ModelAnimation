@@ -4,7 +4,7 @@
 #include <vector>
 #include <rapidjson/document.h>
 
-class Accessor
+class ChunkAccessor
 {
 public:
     int bufferView;
