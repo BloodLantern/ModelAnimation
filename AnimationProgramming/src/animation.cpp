@@ -23,6 +23,9 @@ Animation::Animation(std::string&& name, const size_t keyCount, Skeleton* skelet
 
 	m_CurrentFramePositions.resize(boneCount);
 	m_CurrentFrameRotations.resize(boneCount);
+
+	m_IkTransforms.resize(boneCount);
+	ResetIkTransforms();
 }
 
 size_t Animation::GetKeyCount() const
@@ -102,53 +105,90 @@ float Animation::GetBlendTime(const float deltaTime)
 	return m_CrossFadeAlpha / m_CrossFadeAlphaMax;
 }
 
+void Animation::ResetIkTransforms()
+{
+	for (size_t i = 0; i < m_IkTransforms.size(); i++)
+		m_IkTransforms[i] = KeyFrame(Vector3(0.f), Quaternion::Identity());
+}
+
 void Animation::Animate(const float deltaTime)
 {
+	// Update time related varibles
 	UpdateTime(deltaTime);
 	
 	const size_t boneCount = GetBoneCount();
 
+	// This vector will hold the matrices that are sent to the GPU
+	std::vector<Matrix4x4> matrices(boneCount);
+
+	// This vector holds the global transform of each animated bone
+	std::vector<Matrix4x4> animMatrices(boneCount);
+
+	// Get normalized time in between frames to interpolate between 2 frames
 	float t = std::fmodf(m_Time, m_FrameDuration) / m_FrameDuration;
-	if (Speed > 0)
+
+	// Reverse the normalized time if the animation is playing in reverse
+	// in which case we want to interpolate from the current frame to the last frame 
+	if (Speed < 0)
 		t = 1 - t;
 
-	std::vector<Matrix4x4> matrices(boneCount);
-	std::vector<Matrix4x4> animMatrices(boneCount);
-	
+	// Get current key frames
 	const std::vector<KeyFrame>& keyFrames = m_KeyFrames[CurrentFrame];
 
+	// Get blend target and the lerp value for the blend
 	Animation* target = m_BlendTarget;
 	const float tBlend = GetBlendTime(deltaTime);
 
+	// Apply animation for each bone
 	for (size_t i = 0; i < boneCount; i++)
 	{
 		const Bone& bone = m_Skeleton->GetBone(i);
 
-		m_CurrentFramePositions[i] = calc::Lerp(keyFrames[i].GetPosition(), m_LastKeyFrames[i].GetPosition(), t);
-		m_CurrentFrameRotations[i] = Quaternion::Slerp(keyFrames[i].GetRotation(), m_LastKeyFrames[i].GetRotation(), t);
+		// Process lerp using the previous frame and the current one
+		m_CurrentFramePositions[i] = calc::Lerp(m_LastKeyFrames[i].GetPosition(), keyFrames[i].GetPosition(), t);
+		m_CurrentFrameRotations[i] = Quaternion::Slerp(m_LastKeyFrames[i].GetRotation(), keyFrames[i].GetRotation(), t);
 
+		// Check for blend lerp
 		if (target)
 		{
+			// Lerp between the current animation computed position/rotation and the target animation computed position/rotation
 			m_CurrentFramePositions[i] = calc::Lerp(m_CurrentFramePositions[i], target->m_CurrentFramePositions[i], tBlend);
 			m_CurrentFrameRotations[i] = Quaternion::Slerp(m_CurrentFrameRotations[i], target->m_CurrentFrameRotations[i], tBlend);
 		}
 		
+		// Create TRS from the animation
 		const Matrix4x4 transform = Matrix4x4::TRS(m_CurrentFramePositions[i], m_CurrentFrameRotations[i], 1.f);
 
+		// Create TRS from the IK animation
+		const Matrix4x4 ikTransform = Matrix4x4::TRS(m_IkTransforms[i].GetPosition(), m_IkTransforms[i].GetRotation(), 1.f);
+
+		// Get final animation transform
+		const Matrix4x4 localTransform = transform * ikTransform;
+
+		// Apply the transform locally to the bone
+		const Matrix4x4 localAnim = bone.GetLocalTransform() * localTransform;
+
+		// Feed the animMatrices array
 		const int parentIdx = bone.GetParentIndex();
-		const Matrix4x4 localAnim = bone.GetLocalTransform() * transform;
 		if (parentIdx != -1)
 		{
+			// The bone has a parent, so apply the parent global transform to it
 			animMatrices[i] = animMatrices[parentIdx] * localAnim;
 		}
 		else
 		{
+			// The bone has no parent, so its local transform is the same as its local
 			animMatrices[i] = localAnim;
 		}
 		
+		// Apply the inverse to the global transform to remove the bind pose transform, also transpose the result because OpenGl
 		matrices[i] = (animMatrices[i] * bone.GetGlobalInvTransform()).Transpose();
 	}
 
+	// Clear ik keyframes after the animation was processed
+	ResetIkTransforms();
+
+	// Forward matrices to the GPU
 #ifndef NOENGINE
 	EngineExt::SetSkinningPose(matrices);
 #else
@@ -163,4 +203,30 @@ void Animation::StartCrossFade(const float alpha, const bool isAuto, Animation* 
 
 	m_IsCrossFadeAuto = isAuto;
 	m_BlendTarget = target;
+}
+
+void Animation::ProcessIk(const Vector3& target, const size_t affectedBone)
+{
+	const Bone& bone = m_Skeleton->GetBone(affectedBone);
+	int parentId = bone.GetParentIndex();
+
+	{
+		Vector3 forward = (target - bone.Position).Normalized();
+		Vector3 right = Vector3::Cross(forward, Vector3::UnitY()).Normalized();
+		Vector3 up = Vector3::Cross(right, forward);
+
+		EngineExt::DrawLine(Vector3(250.f, 0.f, 0.f), Vector3(250.f, 0.f, 0.f) + forward * 100.f, Vector3(1.f, 0.f, 0.f));
+		EngineExt::DrawLine(Vector3(250.f, 0.f, 0.f), Vector3(250.f, 0.f, 0.f) + right * 100.f, Vector3(0.f, 1.f, 0.f));
+		EngineExt::DrawLine(Vector3(250.f, 0.f, 0.f), Vector3(250.f, 0.f, 0.f) + up * 100.f, Vector3(0.f, 0.f, 1.f));
+
+		Matrix4x4 view;
+		Matrix4x4::ViewMatrix(Vector3(0.f), forward, up, view);
+
+		m_IkTransforms[affectedBone] = KeyFrame(Vector3(0.f), Quaternion::FromRotationMatrix(view));
+	}
+
+	if (parentId != -1)
+	{
+		ProcessIk(bone.Position, parentId);
+	}
 }

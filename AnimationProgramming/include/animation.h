@@ -12,6 +12,8 @@ private:
 
 	std::vector<std::vector<KeyFrame>> m_KeyFrames;
 	std::vector<KeyFrame> m_LastKeyFrames;
+
+	std::vector<KeyFrame> m_IkTransforms;
 	
 	std::vector<Vector3> m_CurrentFramePositions;
 	std::vector<Quaternion> m_CurrentFrameRotations;
@@ -29,6 +31,8 @@ private:
 
 	void UpdateTime(const float deltaTime);
 	float GetBlendTime(const float deltaTime);
+
+	void ResetIkTransforms();
 
 public:
 	size_t CurrentFrame = 0;
@@ -48,4 +52,6 @@ public:
 
 	void Animate(const float deltaTime);
 	void StartCrossFade(const float alpha, const bool isAuto, Animation* target);
+
+	void ProcessIk(const Vector3& target, const size_t affectedBone);
 };

@@ -22,10 +22,13 @@ bool AnimCmdPlay::OnUpdate(const float deltaTime)
 	}
 	else
 	{
+		/*
 		if (m_Time > anim.GetDuration())
 			return true;
+		*/
 	}
 
+	// anim.ProcessIk(Vector3(0.f, std::sin(m_Time), std::cos(m_Time)), 8);
 	anim.Animate(deltaTime);
 
 	return false;
