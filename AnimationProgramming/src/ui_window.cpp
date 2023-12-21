@@ -293,6 +293,8 @@ void UiWindow::DrawAnimations()
 
 void UiWindow::DrawSkeletonHierarchy()
 {
+	// Temporary, multithreading breaks stuff probably
+	return;
 	ImGui::Begin("Skeleton");
 
 	if (m_Skeleton)

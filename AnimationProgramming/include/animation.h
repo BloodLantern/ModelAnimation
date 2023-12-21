@@ -12,6 +12,9 @@ private:
 
 	std::vector<std::vector<KeyFrame>> m_KeyFrames;
 	std::vector<KeyFrame> m_LastKeyFrames;
+	
+	std::vector<Vector3> m_CurrentFramePositions;
+	std::vector<Quaternion> m_CurrentFrameRotations;
 
 	int m_Framerate = 30;
 	float m_FrameDuration;
@@ -22,6 +25,7 @@ private:
 	float m_CrossFadeAlphaMax;
 	float m_CrossFadeAlpha;
 	bool m_IsCrossFadeAuto;
+	Animation* m_BlendTarget;
 
 	void UpdateTime(const float deltaTime);
 
