@@ -3,6 +3,8 @@
 #include <fstream>
 #include <iostream>
 
+#include "utils.h"
+#include "gltf/gltf.h"
 #include "maths/vector4.hpp"
 
 // We could replicate the behavior of the engine's code but because there is
@@ -110,6 +112,8 @@ bool Mesh::IsLoaded() const
 
 void Mesh::LoadGltfFormat(std::ifstream& file)
 {
+    Gltf gltf;
+    gltf.Load(file);
 }
 
 void Mesh::LoadEngineFormat(std::ifstream& file)
@@ -117,7 +121,7 @@ void Mesh::LoadEngineFormat(std::ifstream& file)
     file.seekg(0);
 
     int vertexCount;
-    file.read(reinterpret_cast<char*>(&vertexCount), sizeof(vertexCount));
+    utils::Read(file, vertexCount);
 
     // Skip the engine's flags
     file.seekg(sizeof(int) * 2ll, std::ios_base::cur);
@@ -135,12 +139,12 @@ void Mesh::LoadEngineFormat(std::ifstream& file)
     _freea(vertices);
 
     int partCount;
-    file.read(reinterpret_cast<char*>(&partCount), sizeof(partCount));
+    utils::Read(file, partCount);
 
     for (int i = 0; i < partCount; i++)
     {
         int indexCount;
-        file.read(reinterpret_cast<char*>(&indexCount), sizeof(indexCount));
+        utils::Read(file, indexCount);
 
         const size_t oldIndicesSize = m_Indices.size();
         m_Indices.resize(m_Indices.size() + indexCount);

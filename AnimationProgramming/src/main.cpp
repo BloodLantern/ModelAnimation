@@ -11,7 +11,8 @@ int main()
 
     Run(&simulation, 1400, 800);
 #else
-    UiWindow window;
+    //UiWindow window;
+    Mesh mesh("Resources/malphite.glb");
 #endif
 
     return 0;

@@ -103,7 +103,7 @@ void UiWindow::Main()
 	ImGui_ImplOpenGL3_Init(glslVersion);
 
 #ifdef NOENGINE
-	m_Mesh = new Mesh("Resources/SK_Mannequin.msh");
+	m_Mesh = new Mesh("Resources/malphite.glb");
 	m_Mesh->Forward();
 
 	m_Shader = new Shader("Resources", "shader.vs", "shader.fs");

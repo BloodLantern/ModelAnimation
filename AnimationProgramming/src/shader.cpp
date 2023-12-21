@@ -57,6 +57,9 @@ bool Shader::LoadShader(const std::filesystem::path &filepath, unsigned int& sha
         case ShaderType::Fragment:
             shaderType = GL_FRAGMENT_SHADER;
             break;
+        
+        default:
+            std::unreachable();
     }
 
     shader = glCreateShader(shaderType);

@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "utils.h"
 #include "ImGui/imgui_impl_opengl3_loader.h"
 
 void Skeleton::Reserve(const size_t nbr)
@@ -83,28 +84,28 @@ void Skeleton::Load(const std::string& filename)
 	std::ifstream file(filename, std::ios::in | std::ios::binary);
 
 	int boneCount;
-	file.read(reinterpret_cast<char*>(&boneCount), sizeof(boneCount));
+	utils::Read(file, boneCount);
 	m_Bones.resize(boneCount);
 
 	for (int i = 0; i < boneCount; i++)
 	{
 		unsigned int stringLength;
-		file.read(reinterpret_cast<char*>(&stringLength), sizeof(stringLength));
+		utils::Read(file, stringLength);
 		std::string boneName;
 		boneName.resize(stringLength);
 		file.read(boneName.data(), stringLength);
 
 		int boneIndex, parentIndex;
-		file.read(reinterpret_cast<char*>(&boneIndex), sizeof(boneIndex));
-		file.read(reinterpret_cast<char*>(&parentIndex), sizeof(parentIndex));
+		utils::Read(file, boneIndex);
+		utils::Read(file, parentIndex);
 
 		m_Bones[i] = Bone(boneName, boneIndex, parentIndex);
 	}
 
 	for (Bone& bone : m_Bones)
 	{
-		file.read(reinterpret_cast<char*>(&bone.Position), sizeof(bone.Position));
-		file.read(reinterpret_cast<char*>(&bone.Rotation), sizeof(bone.Rotation));
+		utils::Read(file, bone.Position);
+		utils::Read(file, bone.Rotation);
 		// Skip the bone scale as we don't need it
 		file.seekg(sizeof(vec3), std::ios_base::cur);
 	}
