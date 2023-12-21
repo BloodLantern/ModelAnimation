@@ -16,8 +16,10 @@ void AnimCmdCrossFade::OnBegin()
 	Animation& animStart = m_Montage->GetAnimation(m_StartAnimationId);
 	Animation& animEnd = m_Montage->GetAnimation(m_EndAnimationId);
 
-	m_NormalizedTimeScale = animEnd.GetDuration() / animStart.GetDuration();
-	animStart.StartCrossFade(m_Duration, true);
+	animEnd.Speed = animEnd.GetDuration() / animStart.GetDuration();
+	animEnd.SetCurrentFrame(animStart.CurrentFrame * animEnd.Speed);
+
+	animStart.StartCrossFade(m_Duration, true, &animEnd);
 }
 
 bool AnimCmdCrossFade::OnUpdate(const float deltaTime)
@@ -31,12 +33,14 @@ bool AnimCmdCrossFade::OnUpdate(const float deltaTime)
 	Animation& animStart = m_Montage->GetAnimation(m_StartAnimationId);
 	Animation& animEnd = m_Montage->GetAnimation(m_EndAnimationId);
 
-	animEnd.Speed = std::lerp(m_NormalizedTimeScale, 1.f, t);
-
-	Animation::CrossFade(animStart, animEnd, deltaTime);
+	animEnd.Animate(deltaTime);
+	animStart.Animate(deltaTime);
 
 	if (m_Time >= m_Duration)
+	{
+		animEnd.Speed = 1.f;
 		return true;
+	}
 
 	return false;
 }

@@ -23,8 +23,9 @@ bool AnimCmdPlayMixed::OnUpdate(const float deltaTime)
 	Animation& animStart = m_Montage->GetAnimation(m_StartAnimationId);
 	Animation& animEnd = m_Montage->GetAnimation(m_EndAnimationId);
 
-	animStart.StartCrossFade(*m_Alpha, false);
-	Animation::CrossFade(animStart, animEnd, deltaTime);
+	animStart.StartCrossFade(*m_Alpha, false, &animEnd);
+	animEnd.Animate(deltaTime);
+	animStart.Animate(deltaTime);
 
 	return false;
 }

@@ -73,8 +73,14 @@ void CSimulation::LoadMontage()
 	const size_t walkingId = m_Montage.AddAnimation(m_Animations[0]);
 	const size_t runningId = m_Montage.AddAnimation(m_Animations[1]);
 
-	m_Montage.AddCommand(new AnimCmdPlayMixed(&m_MixedAnimationAlpha, walkingId, runningId));
-	// m_Montage.AddCommand(new AnimCmdPlay(-1.f, walkingId));
+	const float walkDuration = m_Animations[0].GetDuration();
+	const float runDuration = m_Animations[1].GetDuration();
+
+	// m_Montage.AddCommand(new AnimCmdPlayMixed(&m_MixedAnimationAlpha, walkingId, runningId));
+	m_Montage.AddCommand(new AnimCmdPlay(2.f, walkingId));
+	m_Montage.AddCommand(new AnimCmdCrossFade(3.f, walkingId, runningId));
+	m_Montage.AddCommand(new AnimCmdPlay(2.f, runningId));
+	m_Montage.AddCommand(new AnimCmdWait(.2f));
 }
 
 void CSimulation::SetUiVariables()

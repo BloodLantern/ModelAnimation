@@ -28,6 +28,7 @@ private:
 	Animation* m_BlendTarget;
 
 	void UpdateTime(const float deltaTime);
+	float GetBlendTime(const float deltaTime);
 
 public:
 	size_t CurrentFrame = 0;
@@ -43,9 +44,8 @@ public:
 	_NODISCARD float GetDuration() const;
 
 	void AddKeyFrame(const size_t frame, const size_t boneIndex, const Vector3& position, const Quaternion& rotation);
+	void SetCurrentFrame(const size_t frame);
 
 	void Animate(const float deltaTime);
-	void StartCrossFade(const float alpha, const bool isAuto);
-
-	static void CrossFade(Animation& start, Animation& end, const float deltaTime);
+	void StartCrossFade(const float alpha, const bool isAuto, Animation* target);
 };

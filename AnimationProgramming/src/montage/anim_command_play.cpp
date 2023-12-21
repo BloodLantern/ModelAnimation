@@ -13,7 +13,7 @@ bool AnimCmdPlay::OnUpdate(const float deltaTime)
 	m_Time += deltaTime;
 
 	Animation& anim = m_Montage->GetAnimation(m_AnimationId);
-	anim.StartCrossFade(-1.f, false);
+	anim.StartCrossFade(-1.f, false, nullptr);
 
 	if (m_Duration > 0.f)
 	{

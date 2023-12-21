@@ -55,6 +55,11 @@ void Animation::AddKeyFrame(const size_t frame, const size_t boneIndex, const Ve
 	m_KeyFrames[frame][boneIndex] = KeyFrame(position, rotation);
 }
 
+void Animation::SetCurrentFrame(const size_t frame)
+{
+	m_Time = frame * m_FrameDuration;
+}
+
 void Animation::UpdateTime(const float deltaTime)
 {
 	if (Paused)
@@ -80,6 +85,23 @@ void Animation::UpdateTime(const float deltaTime)
 		m_LastKeyFrames = m_KeyFrames[lastFrame];
 }
 
+float Animation::GetBlendTime(const float deltaTime)
+{
+	if (!m_IsCrossFadeAuto)
+		return m_CrossFadeAlphaMax;
+	
+	m_CrossFadeAlpha += deltaTime;
+
+	if (m_CrossFadeAlpha > m_CrossFadeAlphaMax)
+	{
+		m_CrossFadeAlphaMax = -1.f;
+		m_BlendTarget = nullptr;
+		return 1.f;
+	}
+
+	return m_CrossFadeAlpha / m_CrossFadeAlphaMax;
+}
+
 void Animation::Animate(const float deltaTime)
 {
 	UpdateTime(deltaTime);
@@ -95,6 +117,9 @@ void Animation::Animate(const float deltaTime)
 	
 	const std::vector<KeyFrame>& keyFrames = m_KeyFrames[CurrentFrame];
 
+	Animation* target = m_BlendTarget;
+	const float tBlend = GetBlendTime(deltaTime);
+
 	for (size_t i = 0; i < boneCount; i++)
 	{
 		const Bone& bone = m_Skeleton->GetBone(i);
@@ -102,10 +127,10 @@ void Animation::Animate(const float deltaTime)
 		m_CurrentFramePositions[i] = calc::Lerp(keyFrames[i].GetPosition(), m_LastKeyFrames[i].GetPosition(), t);
 		m_CurrentFrameRotations[i] = Quaternion::Slerp(keyFrames[i].GetRotation(), m_LastKeyFrames[i].GetRotation(), t);
 
-		if (m_BlendTarget)
+		if (target)
 		{
-			m_CurrentFramePositions[i] = calc::Lerp(m_CurrentFramePositions[i], m_BlendTarget->m_CurrentFramePositions[i], m_CrossFadeAlphaMax);
-			m_CurrentFrameRotations[i] = Quaternion::Slerp(m_CurrentFrameRotations[i], m_BlendTarget->m_CurrentFrameRotations[i], m_CrossFadeAlphaMax);
+			m_CurrentFramePositions[i] = calc::Lerp(m_CurrentFramePositions[i], target->m_CurrentFramePositions[i], tBlend);
+			m_CurrentFrameRotations[i] = Quaternion::Slerp(m_CurrentFrameRotations[i], target->m_CurrentFrameRotations[i], tBlend);
 		}
 		
 		const Matrix4x4 transform = Matrix4x4::TRS(m_CurrentFramePositions[i], m_CurrentFrameRotations[i], 1.f);
@@ -131,17 +156,11 @@ void Animation::Animate(const float deltaTime)
 #endif
 }
 
-void Animation::StartCrossFade(const float alpha, const bool isAuto)
+void Animation::StartCrossFade(const float alpha, const bool isAuto, Animation* target)
 {
 	m_CrossFadeAlphaMax = alpha;
 	m_CrossFadeAlpha = 0.f;
 
 	m_IsCrossFadeAuto = isAuto;
-}
-
-void Animation::CrossFade(Animation& start, Animation& end, const float deltaTime)
-{
-	start.m_BlendTarget = &end;
-	end.Animate(deltaTime);
-	start.Animate(deltaTime);
+	m_BlendTarget = target;
 }
