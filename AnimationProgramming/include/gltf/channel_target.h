@@ -10,5 +10,7 @@ public:
     int node;
     std::string path;
 
-    void Load(const rapidjson::Value& value);
+    Target() = default;
+
+    explicit Target(const rapidjson::Value& value);
 };

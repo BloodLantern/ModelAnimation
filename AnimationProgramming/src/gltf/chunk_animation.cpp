@@ -1,22 +1,10 @@
-﻿#include "..\..\include\gltf\chunk_animation.h"
+﻿#include "gltf/chunk_animation.h"
 
-void ChunkAnimation::Load(const rapidjson::Value& value)
+#include "utils.h"
+
+ChunkAnimation::ChunkAnimation(const rapidjson::Value& value)
 {
-    const auto& channelArray = value["channels"].GetArray();
-    channels.resize(channelArray.Size());
-    for (unsigned int i = 0; i < channelArray.Size(); i++)
-    {
-        Channel channel;
-        channel.Load(channelArray[i]);
-        channels[i] = channel;
-    }
+    utils::SetFromJsonArrayClass(VAR_AND_NAME(channels), value);
     
-    const auto& samplerArray = value["samplers"].GetArray();
-    samplers.resize(samplerArray.Size());
-    for (unsigned int i = 0; i < samplerArray.Size(); i++)
-    {
-        Sampler sampler;
-        sampler.Load(samplerArray[i]);
-        samplers[i] = sampler;
-    }
+    utils::SetFromJsonArrayClass(VAR_AND_NAME(samplers), value);
 }

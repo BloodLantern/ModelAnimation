@@ -4,6 +4,8 @@
 #include <vector>
 #include <rapidjson/document.h>
 
+#include "accessor_sparse.h"
+
 class ChunkAccessor
 {
 public:
@@ -17,10 +19,10 @@ public:
     std::vector<float> max;
     // Size between 1 and 16
     std::vector<float> min;
-    //accessor.sparse sparse; Not needed here
+    AccessorSparse sparse;
     std::string name;
-    //extension extensions; Not needed here
-    //extra extras; Not needed here
 
-    void Load(const rapidjson::Value& object);
+    ChunkAccessor() = default;
+    
+    explicit ChunkAccessor(const rapidjson::Value& value);
 };

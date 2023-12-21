@@ -10,6 +10,8 @@ public:
     int input;
     std::string interpolation = "LINEAR";
     int output;
-    
-    void Load(const rapidjson::Value& value);
+
+    Sampler() = default;
+
+    explicit Sampler(const rapidjson::Value& value);
 };

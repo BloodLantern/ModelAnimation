@@ -4,8 +4,8 @@
 #include <vector>
 #include <rapidjson/document.h>
 
-#include "channel.h"
-#include "sampler.h"
+#include "animation_channel.h"
+#include "animation_sampler.h"
 
 class ChunkAnimation
 {
@@ -13,6 +13,8 @@ public:
     std::vector<Channel> channels;
     std::vector<Sampler> samplers;
     std::string name;
-    
-    void Load(const rapidjson::Value& value);
+
+    ChunkAnimation() = default;
+
+    explicit ChunkAnimation(const rapidjson::Value& value);
 };

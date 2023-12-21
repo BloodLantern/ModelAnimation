@@ -1,33 +1,28 @@
-﻿#include "..\..\include\gltf\chunk_accessor.h"
+﻿#include "gltf/chunk_accessor.h"
 
 #include <string>
 
-void ChunkAccessor::Load(const rapidjson::Value& object)
+#include "utils.h"
+
+ChunkAccessor::ChunkAccessor(const rapidjson::Value& value)
 {
-    if (object.HasMember("bufferView"))
-        bufferView = object["bufferView"].GetInt();
+    utils::SetFromJsonSafe(VAR_AND_NAME(bufferView), value);
     
-    if (object.HasMember("byteOffset"))
-        byteOffset = object["byteOffset"].GetInt();
+    utils::SetFromJsonSafe(VAR_AND_NAME(byteOffset), value);
     
-    componentType = object["componentType"].GetInt();
+    utils::SetFromJson(VAR_AND_NAME(componentType), value);
     
-    if (object.HasMember("normalized"))
-        normalized = object["normalized"].GetBool();
+    utils::SetFromJsonSafe(VAR_AND_NAME(normalized), value);
     
-    count = object["count"].GetInt();
+    utils::SetFromJson(VAR_AND_NAME(count), value);
     
-    type = object["type"].GetString();
+    utils::SetFromJson(VAR_AND_NAME(type), value);
+    
+    utils::SetFromJsonArraySafe(VAR_AND_NAME(max), value);
+    
+    utils::SetFromJsonArraySafe(VAR_AND_NAME(min), value);
 
-    const auto& maxArray = object["max"].GetArray();
-    max.resize(maxArray.Size());
-    for (unsigned int i = 0; i < maxArray.Size(); i++)
-        max[i] = maxArray[i].GetFloat();
-
-    const auto& minArray = object["min"].GetArray();
-    min.resize(minArray.Size());
-    for (unsigned int i = 0; i < minArray.Size(); i++)
-        min[i] = minArray[i].GetFloat();
+    utils::SetFromJsonClassSafe(VAR_AND_NAME(sparse), value);
     
-    name = object["name"].GetString();
+    utils::SetFromJsonSafe(VAR_AND_NAME(name), value);
 }

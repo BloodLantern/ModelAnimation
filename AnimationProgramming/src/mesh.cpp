@@ -112,8 +112,7 @@ bool Mesh::IsLoaded() const
 
 void Mesh::LoadGltfFormat(std::ifstream& file)
 {
-    Gltf gltf;
-    gltf.Load(file);
+    Gltf gltf(file);
 }
 
 void Mesh::LoadEngineFormat(std::ifstream& file)
