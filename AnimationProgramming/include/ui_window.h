@@ -12,11 +12,10 @@ class CSimulation;
 
 class UiWindow
 {
-private:
 	int32_t m_WindowX;
 	int32_t m_WindowY;
 
-	Skeleton m_Skeleton;
+	Skeleton* m_Skeleton;
 	Bone* m_SelectedBone;
 
 	AnimationMontage m_Montage = AnimationMontage("WalkingMontage");
@@ -29,7 +28,9 @@ private:
 
 	std::thread m_Thread;
 
+#ifndef NOENGINE
 	bool m_CloseWindow;
+#endif
 
 	void Main();
 
@@ -38,15 +39,24 @@ private:
 	void DrawCurrentBoneInfo() const;
 	void DrawAnimations();
 
+#ifndef NOENGINE
 	void StartThread();
 	void EndThread();
+#endif
 
 public:
+#ifndef NOENGINE
+	UiWindow(Skeleton* skeleton);
+#else
 	UiWindow();
+#endif
 	~UiWindow();
 
 	void SetAnimations(std::vector<Animation>* animations);
 	void SetMixedAnimationAlpha(float* alpha);
+#ifndef NOENGINE
+	void Close();
+#endif
 
 	void* operator new(size_t count) = delete;
 	void operator delete(void* ptr) = delete;

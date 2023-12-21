@@ -1,5 +1,6 @@
 #pragma once
 
+#ifndef NOENGINE
 #include "Engine.h"
 
 #include "maths/vector3.hpp"
@@ -17,3 +18,4 @@ namespace EngineExt
 
 	void SetSkinningPose(const std::vector<Matrix4x4>& matrices);
 };
+#endif

@@ -1,3 +1,4 @@
+#ifndef NOENGINE
 #ifndef __SIMULATION_H__
 #define __SIMULATION_H__
 
@@ -12,5 +13,5 @@ public:
 	virtual void Update( float frameTime ){}
 };
 
-
+#endif
 #endif

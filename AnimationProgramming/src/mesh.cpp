@@ -99,6 +99,8 @@ void Mesh::Draw() const
     
     glBindVertexArray(m_Vao);
     glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(m_Vertices.size()));
+
+    glBindVertexArray(0);
 }
 
 bool Mesh::IsLoaded() const
@@ -126,7 +128,10 @@ void Mesh::LoadEngineFormat(std::ifstream& file)
     char* vertices = static_cast<char*>(_malloca(verticesSize));
     file.read(vertices, verticesSize);
     for (int i = 0; i < vertexCount; i++)
+    {
         m_Vertices[i] = *reinterpret_cast<vec3*>(vertices + i * VertexFormatSize);
+        std::swap(m_Vertices[i].y, m_Vertices[i].z);
+    }
     _freea(vertices);
 
     int partCount;
@@ -143,8 +148,6 @@ void Mesh::LoadEngineFormat(std::ifstream& file)
         const unsigned int indicesSize = indexCount * sizeof(unsigned int);
         char* indices = static_cast<char*>(_malloca(indicesSize));
         file.read(indices, indicesSize);
-        /*for (int j = 0; j < indexCount; j++)
-            m_Indices[j + oldIndicesSize] = reinterpret_cast<int*>(indices)[j];*/
         std::memcpy(reinterpret_cast<char*>(m_Indices.data()) + oldIndicesSize, indices, indicesSize);
         _freea(indices);
 

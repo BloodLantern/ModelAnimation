@@ -1,3 +1,4 @@
+#ifndef NOENGINE
 #include "animation_programming.h"
 
 #include "Engine.h"
@@ -18,7 +19,13 @@
 #include "montage/anim_command_play_mixed.h"
 
 CSimulation::CSimulation()
+	: m_UiWindow(&skeleton)
 {
+}
+
+CSimulation::~CSimulation()
+{
+	m_UiWindow.Close();
 }
 
 void CSimulation::LoadSkeleton()
@@ -104,4 +111,4 @@ void CSimulation::Update(const float frameTime)
 	skeletonMutex.unlock();
 	m_Montage.Update(frameTime);
 }
-
+#endif

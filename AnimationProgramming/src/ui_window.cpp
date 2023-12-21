@@ -12,26 +12,37 @@
 #include <numbers>
 #include <thread>
 
-
+#ifdef NOENGINE
 UiWindow::UiWindow()
+	: m_Skeleton(new Skeleton)
+#else
+UiWindow::UiWindow(Skeleton* skeleton)
+	: m_Skeleton(skeleton)
+#endif
 {
-	m_Skeleton.Load("Resources/ThirdPersonWalk.skel");
+#ifdef NOENGINE
+	m_Skeleton->Load("Resources/ThirdPersonWalk.skel");
 
-	for (Bone& bone : m_Skeleton.GetBones())
+	for (Bone& bone : m_Skeleton->GetBones())
 		bone.ComputeTransform();
 
-	// m_Skeleton.SetupFamily();
+	m_Skeleton->SetupFamily();
+	Main();
+#else
 	StartThread();
-	// Main();
+#endif
 }
 
 UiWindow::~UiWindow()
 {
-	// Called when the main window is closed, forcefully close the UI window and join the thread
-	m_CloseWindow = true;
+#ifndef NOENGINE
 	EndThread();
+#else
+	delete m_Skeleton;
+#endif
 }
 
+#ifndef NOENGINE
 void UiWindow::StartThread()
 {
     m_CloseWindow = false;
@@ -43,6 +54,7 @@ void UiWindow::EndThread()
     if (m_Thread.joinable())
         m_Thread.join();
 }
+#endif
 
 void UiWindow::Main()
 {
@@ -90,39 +102,53 @@ void UiWindow::Main()
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init(glslVersion);
 
+#ifdef NOENGINE
 	m_Mesh = new Mesh("Resources/SK_Mannequin.msh");
 	m_Mesh->Forward();
 
 	m_Shader = new Shader("Resources", "shader.vs", "shader.fs");
+#endif
 
 	// Show window
 	glfwShowWindow(window);
-	//glfwHideWindow(window);
-
-	while (!glfwWindowShouldClose(window))
+#ifndef NOENGINE
+	glfwHideWindow(window);
+#endif
+	
+	while (
+		!glfwWindowShouldClose(window)
+#ifndef NOENGINE
+		&& !m_CloseWindow
+#endif
+		)
 	{
 		glfwPollEvents();
 
 		glfwGetWindowPos(window, &m_WindowX, &m_WindowY);
+
+		glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		m_Shader->SetUniform("modelViewMatrix", Matrix4x4::TRS(vec3(0.f, 0.f, 10.f), vec3(0.f), 1.f));
+#ifdef NOENGINE
+		m_Shader->SetUniform("modelViewMatrix", Matrix4x4::TRS(vec3(0.f, -5.f, 10.f), vec3(0.f), 0.05f));
 		Matrix4x4 projection;
 		Matrix4x4::PerspectiveProjectionMatrix(std::numbers::pi_v<float> / 2.f, 16.f / 9.f, 0.01f, 1000.f, projection);
 		m_Shader->SetUniform("projectionMatrix", projection);
-		
-		if (m_Skeleton.GetBoneCount() > 0)
+
+		if (m_Skeleton->GetBoneCount() > 0)
 		{
 			for (int i = 0; i < 64; i++)
-				m_Shader->SetUniform(std::string("skin[") + std::to_string(i) + "]", m_Skeleton.GetBone(i).GetGlobalTransform());
+				m_Shader->SetUniform(std::string("skin[") + std::to_string(i) + "]", m_Skeleton->GetBone(i).GetGlobalTransform());
 		}
 
 		m_Shader->Use();
 		m_Mesh->Draw();
+#endif
 
 		DrawSkeletonHierarchy();
 		DrawCurrentBoneInfo();
@@ -135,9 +161,6 @@ void UiWindow::Main()
 		glfwGetFramebufferSize(window, &displayW, &displayH);
 		glViewport(0, 0, displayW, displayH);
 
-		glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		GLFWwindow* backup_current_context = glfwGetCurrentContext();
@@ -147,9 +170,11 @@ void UiWindow::Main()
 
 		glfwSwapBuffers(window);
 	}
-
+	
+#ifdef NOENGINE
 	delete m_Shader;
 	delete m_Mesh;
+#endif
 
 	// Cleanup
 	ImGui_ImplOpenGL3_Shutdown();
@@ -247,7 +272,7 @@ void UiWindow::DrawAnimations()
 
 				const KeyFrame& keyFrame = a.GetKeyFrame(i, j);
 
-				ImGui::Text("%s", m_Skeleton.GetBone(j).GetName().c_str());
+				ImGui::Text("%s", m_Skeleton->GetBone(j).GetName().c_str());
 
 				ImGui::BeginDisabled();
 				ImGui::InputFloat3("Position", &const_cast<Vector3&>(keyFrame.GetPosition()).x);
@@ -270,7 +295,10 @@ void UiWindow::DrawSkeletonHierarchy()
 {
 	ImGui::Begin("Skeleton");
 
-	DrawBoneInSkeletonHierarchy(m_Skeleton.GetRoot());
+	if (m_Skeleton)
+		DrawBoneInSkeletonHierarchy(m_Skeleton->GetRoot());
+	else
+		ImGui::Text("[NO SKELETON]");
 
 	ImGui::End();
 }
@@ -284,3 +312,12 @@ void UiWindow::SetMixedAnimationAlpha(float* alpha)
 {
 	m_MixedAnimationAlpha = alpha;
 }
+
+#ifndef NOENGINE
+void UiWindow::Close()
+{
+	// Called when the main window is closed, forcefully close the UI window and join the thread
+	m_CloseWindow = true;
+	m_Skeleton = nullptr;
+}
+#endif

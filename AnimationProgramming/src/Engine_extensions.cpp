@@ -1,3 +1,4 @@
+#ifndef NOENGINE
 #include "Engine_extensions.h"
 
 void EngineExt::GetSkeletonBoneLocalBindTransform(const int boneIndex, Vector3& p, Quaternion& r)
@@ -19,3 +20,4 @@ void EngineExt::SetSkinningPose(const std::vector<Matrix4x4>& matrices)
 {
 	::SetSkinningPose(&matrices[0][0].x, matrices.size());
 }
+#endif

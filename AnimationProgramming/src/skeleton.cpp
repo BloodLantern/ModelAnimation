@@ -48,7 +48,11 @@ void Skeleton::SetupFamily()
 {
 	for (size_t i = 0; i < m_Bones.size(); i++)
 	{
+#ifndef NOENGINE
 		const int parentId = GetSkeletonBoneParentIndex(i);
+#else
+		const int parentId = m_Bones[i].GetParentIndex();
+#endif
 
 		if (parentId != -1)
 		{
@@ -84,7 +88,7 @@ void Skeleton::Load(const std::string& filename)
 
 	for (int i = 0; i < boneCount; i++)
 	{
-		size_t stringLength;
+		unsigned int stringLength;
 		file.read(reinterpret_cast<char*>(&stringLength), sizeof(stringLength));
 		std::string boneName;
 		boneName.resize(stringLength);
@@ -119,7 +123,11 @@ void Skeleton::DrawRecursive(Bone& bone, const Vector3& parentPos)
 	const Vector3 position = Vector3(p.x, p.y, p.z);
 
 	if (parentPos != Vector3(0.f))
+#ifndef NOENGINE
 		EngineExt::DrawLine(parentPos, position, Vector3(0.f));
+#else
+			; // TODO: Draw line without engine
+#endif
 
 	for (Bone* b : bone.GetChildren())
 	{

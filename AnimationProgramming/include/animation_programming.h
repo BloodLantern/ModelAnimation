@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#ifndef NOENGINE
 #include <mutex>
 
 #include "Simulation.h"
@@ -19,6 +20,7 @@ public:
 	Skeleton skeleton;
 	
 	CSimulation();
+	~CSimulation();
 
 private:
 	void LoadSkeleton();
@@ -33,3 +35,4 @@ private:
 
 	void Update(const float frameTime) override;
 };
+#endif

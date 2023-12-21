@@ -134,7 +134,11 @@ void Animation::Animate(const float deltaTime)
 		matrices[i] = (animMatrices[i] * bone.GetGlobalInvTransform()).Transpose();
 	}
 
+#ifndef NOENGINE
 	EngineExt::SetSkinningPose(matrices);
+#else
+	// TODO: Apply animation without engine
+#endif
 }
 
 void Animation::StartCrossFade(const float alpha, const bool isAuto)
