@@ -6,15 +6,18 @@
 
 #include <vector>
 
+#include "vertex.h"
 #include "gltf/gltf.h"
 
 class Mesh
 {
-    std::vector<vec3> m_Vertices;
+    std::vector<Vertex> m_Vertices;
     std::vector<unsigned short> m_Indices;
+    
     bool m_Loaded = false;
+    
     GLuint m_Vbo, m_Ebo, m_Vao;
-    GLuint m_TextureId;
+    std::vector<GLuint> m_TextureIds;
 
     Gltf* m_Gltf = nullptr;
     
@@ -34,5 +37,4 @@ public:
     
 private:
     void LoadGltfFormat(std::ifstream& file, const std::filesystem::path& filepath);
-    void LoadEngineFormat(std::ifstream& file);
 };

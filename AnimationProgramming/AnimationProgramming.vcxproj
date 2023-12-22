@@ -158,6 +158,7 @@
     <ClInclude Include="include\ui_window.h" />
     <ClInclude Include="include\skeleton.h" />
     <ClInclude Include="include\utils.h" />
+    <ClInclude Include="include\vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Data\Resources\shader.vs" />

@@ -8,8 +8,8 @@ class MeshPrimitive
 {
 public:
     rapidjson::Document attributes;
-    int indices;
-    int material;
+    int indices = -1;
+    int material = -1;
     int mode = 4;
     std::vector<rapidjson::Document> targets;
 

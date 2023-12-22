@@ -3,6 +3,7 @@
 #include "gltf_chunk.h"
 
 #include <fstream>
+#include <unordered_map>
 
 #include "gltf_chunk_json.h"
 
@@ -19,14 +20,13 @@ public:
         Buffer(const char* ptr, int length);
     };
 
-    struct VertexBuffer : Buffer
+    struct BufferView : Buffer
     {
-        int stride;
-        int target;
+        const ChunkBufferView* bufferView;
 
-        VertexBuffer() = default;
+        BufferView() = default;
 
-        VertexBuffer(const char* bufferPtr, int bufferLength, int stride, int target);
+        BufferView(const char* bufferPtr, int bufferLength, const ChunkBufferView* bufferView);
     };
 
     struct AccessorBuffer : Buffer
@@ -49,17 +49,32 @@ public:
         int width, height;
         int channels;
     };
+
+    struct MeshPrimitiveData
+    {
+        std::unordered_map<std::string, unsigned int> attributes;
+        int indices;
+        int material;
+        int mode;
+    };
+
+    struct MeshData
+    {
+        std::vector<MeshPrimitiveData> primitives;
+    };
     
 private:
     const ChunkJson* m_JsonHeader;
     
     std::vector<char*> m_RawBuffers;
 
-    std::vector<VertexBuffer> m_VertexBuffers;
+    std::vector<BufferView> m_BufferViews;
     
     std::vector<AccessorBuffer> m_AccessorBuffers;
 
     std::vector<ImageData> m_Images;
+
+    std::vector<MeshData> m_Meshes;
 
 public:
     ChunkBin() = default;
@@ -68,9 +83,11 @@ public:
 
     ~ChunkBin();
 
-    _NODISCARD const std::vector<VertexBuffer>& GetVertexBuffers() const;
+    _NODISCARD const std::vector<BufferView>& GetBufferViews() const;
     
     _NODISCARD const std::vector<AccessorBuffer>& GetAccessorBuffers() const;
     
     _NODISCARD const std::vector<ImageData>& GetImages() const;
+    
+    _NODISCARD const std::vector<MeshData>& GetMeshes() const;
 };

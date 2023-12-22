@@ -12,10 +12,9 @@ ChunkBin::Buffer::Buffer(const char* const ptr, const int length)
 {
 }
 
-ChunkBin::VertexBuffer::VertexBuffer(const char* const bufferPtr, const int bufferLength, const int stride, const int target)
+ChunkBin::BufferView::BufferView(const char* bufferPtr, int bufferLength, const ChunkBufferView* bufferView)
     : Buffer(bufferPtr, bufferLength)
-    , stride(stride)
-    , target(target)
+    , bufferView(bufferView)
 {
 }
 
@@ -54,9 +53,13 @@ ChunkBin::ChunkBin(const unsigned int length, char type[4], std::ifstream& file,
             rawBufferFile.read(m_RawBuffers[i], buffer.byteLength);
         }
     }
+    
+    // Padding
+    while (file.peek() == '\0')
+        file.get();
 
     // ChunkBufferView
-    m_VertexBuffers.resize(jsonHeader->bufferViews.size());
+    m_BufferViews.resize(jsonHeader->bufferViews.size());
     for (unsigned int i = 0; i < jsonHeader->bufferViews.size(); i++)
     {
         const ChunkBufferView& bufferView = jsonHeader->bufferViews[i];
@@ -64,7 +67,7 @@ ChunkBin::ChunkBin(const unsigned int length, char type[4], std::ifstream& file,
         if (bufferView.target != 34962 && bufferView.target != 34963)
             std::cout << "Invalid buffer view target: " << bufferView.target << ", expected 34962 or 34963\n";
         else
-            m_VertexBuffers[i] = VertexBuffer(m_RawBuffers[bufferView.buffer] + bufferView.byteOffset, bufferView.byteLength, bufferView.byteStride, bufferView.target);
+            m_BufferViews[i] = BufferView(m_RawBuffers[bufferView.buffer] + bufferView.byteOffset, bufferView.byteLength, &bufferView);
     }
 
     // ChunkAccessor
@@ -72,7 +75,7 @@ ChunkBin::ChunkBin(const unsigned int length, char type[4], std::ifstream& file,
     for (unsigned int i = 0; i < jsonHeader->accessors.size(); i++)
     {
         const ChunkAccessor& accessor = jsonHeader->accessors[i];
-        const VertexBuffer& view = m_VertexBuffers[accessor.bufferView];
+        const BufferView& view = m_BufferViews[accessor.bufferView];
 
         int typeSize;
         switch (accessor.componentType)
@@ -136,27 +139,48 @@ ChunkBin::ChunkBin(const unsigned int length, char type[4], std::ifstream& file,
     for (unsigned int i = 0; i < jsonHeader->images.size(); i++)
     {
         const ChunkImage& image = jsonHeader->images[i];
-        const VertexBuffer& view = m_VertexBuffers[image.bufferView];
+        const BufferView& view = m_BufferViews[image.bufferView];
 
         ImageData data;
         data.data = stbi_load_from_memory(reinterpret_cast<const unsigned char* const>(view.ptr), view.length, &data.width, &data.height, &data.channels, 4);
         m_Images[i] = data;
     }
     
-    // Padding
-    while (file.peek() == '\0')
-        file.get();
+    m_Meshes.resize(jsonHeader->meshes.size());
+    for (unsigned int i = 0; i < jsonHeader->meshes.size(); i++)
+    {
+        const ChunkMesh& mesh = jsonHeader->meshes[i];
+
+        MeshData data;
+        data.primitives.resize(mesh.primitives.size());
+        for (unsigned int j = 0; j < mesh.primitives.size(); j++)
+        {
+            const MeshPrimitive& primitive = mesh.primitives[j];
+            MeshPrimitiveData& primitiveData = data.primitives[j];
+
+            primitiveData.attributes.reserve(primitive.attributes.MemberCount());
+            for (auto it = primitive.attributes.MemberBegin(); it != primitive.attributes.MemberEnd(); it++)
+                primitiveData.attributes.emplace(it->name.GetString(), it->value.GetInt());
+            
+            primitiveData.indices = primitive.indices;
+            primitiveData.material = primitive.material;
+            primitiveData.mode = primitive.mode;
+        }
+        m_Meshes[i] = data;
+    }
 }
 
 ChunkBin::~ChunkBin()
 {
     for (const char* const rawBuffer : m_RawBuffers)
         delete rawBuffer;
+    for (const ImageData& imageData : m_Images)
+        stbi_image_free(imageData.data);
 }
 
-const std::vector<ChunkBin::VertexBuffer>& ChunkBin::GetVertexBuffers() const
+const std::vector<ChunkBin::BufferView>& ChunkBin::GetBufferViews() const
 {
-    return m_VertexBuffers;
+    return m_BufferViews;
 }
 
 const std::vector<ChunkBin::AccessorBuffer>& ChunkBin::GetAccessorBuffers() const
@@ -167,4 +191,9 @@ const std::vector<ChunkBin::AccessorBuffer>& ChunkBin::GetAccessorBuffers() cons
 const std::vector<ChunkBin::ImageData>& ChunkBin::GetImages() const
 {
     return m_Images;
+}
+
+const std::vector<ChunkBin::MeshData>& ChunkBin::GetMeshes() const
+{
+    return m_Meshes;
 }

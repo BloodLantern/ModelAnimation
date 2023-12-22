@@ -42,7 +42,7 @@ void Mesh::Load(const std::string& filename)
     if (std::strncmp(magic, "glTF", sizeof(magic)) == 0)
         LoadGltfFormat(file, filename);
     else
-        LoadEngineFormat(file);
+        std::cout << "Invalid file format: " << std::string(magic, 4) << '\n';
 
     m_Loaded = true;
 }
@@ -54,8 +54,8 @@ void Mesh::Unload()
 
     glDeleteBuffers(2, &m_Vbo);
     glDeleteVertexArrays(1, &m_Vao);
-    
-    glDeleteTextures(1, &m_TextureId);
+
+    glDeleteTextures(static_cast<GLsizei>(m_TextureIds.size()), m_TextureIds.data());
 
     delete m_Gltf;
     
@@ -82,70 +82,97 @@ void Mesh::Forward()
     {
         const ChunkBin* bin = m_Gltf->GetBinaryChunk();
 
-        const auto& vertexBuffers = bin->GetVertexBuffers();
+        const std::vector<ChunkBin::MeshData>& meshDatas = bin->GetMeshes();
+
+        if (meshDatas.size() > 1)
+            std::cout << "Currently cannot load more than one mesh in a single glTF file\n";
+
+        const ChunkBin::MeshData& meshData = meshDatas[0];
+
+        const std::vector<ChunkBin::MeshPrimitiveData>& meshPrimitiveDatas = meshData.primitives;
+
+        if (meshPrimitiveDatas.size() > 1)
+            std::cout << "Currently cannot load more than one primitive in a single glTF mesh\n";
+
+        const ChunkBin::MeshPrimitiveData& meshPrimitiveData = meshPrimitiveDatas[0];
+
+        const std::vector<ChunkBin::BufferView>& bufferViews = bin->GetBufferViews();
+        
         {
-            for (int i = 0; i < 2; i++)
             {
-                const ChunkBin::VertexBuffer& buffer = vertexBuffers[i];
-                if (buffer.target == GL_ARRAY_BUFFER)
+                const ChunkBin::BufferView& positions = bufferViews[meshPrimitiveData.attributes.at("POSITION")];
+                
+                if (positions.bufferView->target != GL_ARRAY_BUFFER)
+                    std::cout << "Invalid target for POSITION attribute: " << positions.bufferView->target << ", expected: " << GL_ARRAY_BUFFER << '\n';
+
+                const ChunkBin::BufferView& texCoord = bufferViews[meshPrimitiveData.attributes.at("TEXCOORD_0")];
+                
+                m_Vertices.resize(positions.length / sizeof(vec3));
+                for (unsigned int i = 0; i < m_Vertices.size(); i++)
                 {
-                    m_Vertices.reserve(buffer.length / sizeof(vec3));
-                    for (int i = 0; i < buffer.length; i += sizeof(vec3))
-                        m_Vertices.push_back(*reinterpret_cast<const vec3* const>(buffer.ptr + i));
-                }
-                else if (buffer.target == GL_ELEMENT_ARRAY_BUFFER)
-                {
-                    m_Indices.reserve(buffer.length / sizeof(unsigned short));
-                    for (int i = 0; i < buffer.length; i += sizeof(unsigned short))
-                        m_Indices.push_back(*reinterpret_cast<const unsigned short* const>(buffer.ptr + i));
+                    m_Vertices[i] = Vertex
+                    {
+                        .position = *reinterpret_cast<const vec3* const>(positions.ptr + i * sizeof(vec3)),
+                        .texCoord = *reinterpret_cast<const vec2* const>(texCoord.ptr + i * sizeof(vec2))
+                    };
                 }
             }
 
-            glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(m_Vertices.size()) * sizeof(vec3), m_Vertices.data(), GL_STATIC_DRAW);
+            {
+                const ChunkBin::BufferView& indices = bufferViews[meshPrimitiveData.indices];
+            
+                if (indices.bufferView->target == GL_ELEMENT_ARRAY_BUFFER)
+                {
+                    m_Indices.resize(indices.length / sizeof(unsigned short));
+                    std::memcpy(m_Indices.data(), indices.ptr, indices.length);
+                }
+            }
+
+            glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(m_Vertices.size()) * sizeof(Vertex), m_Vertices.data(), GL_STATIC_DRAW);
 
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(m_Indices.size()) * sizeof(unsigned short), m_Indices.data(), GL_STATIC_DRAW);
         }
 
         {
-            const auto& vertexArrays = bin->GetAccessorBuffers();
-            for (unsigned int i = 0; i < vertexArrays.size(); i++)
+            const std::vector<ChunkBin::AccessorBuffer>& accessorBuffers = bin->GetAccessorBuffers();
+            
+            for (const auto& accessor : accessorBuffers)
             {
-                const ChunkBin::VertexBuffer& vertex = vertexBuffers[i];
-                const ChunkBin::AccessorBuffer& accessor = vertexArrays[i];
-
                 if (accessor.accessor->name == "POSITION")
                 {
-                    glVertexAttribPointer(0, static_cast<GLsizei>(accessor.componentCount), accessor.componentType, accessor.normalized, vertex.stride, nullptr);
+                    glVertexAttribPointer(0, static_cast<GLsizei>(accessor.componentCount), accessor.componentType, accessor.normalized, sizeof(Vertex), nullptr);
                     glEnableVertexAttribArray(0);
+                }
+                else if (accessor.accessor->name == "TEXCOORD_0")
+                {
+                    glVertexAttribPointer(1, static_cast<GLsizei>(accessor.componentCount), accessor.componentType, accessor.normalized, sizeof(Vertex), reinterpret_cast<void*>(sizeof(vec3)));
+                    glEnableVertexAttribArray(1);
                 }
             }
         }
 
         {
-            /*const auto& image = bin->GetImages()[0];
-
-            glGenTextures(1, &m_TextureId);
-            glBindTexture(GL_TEXTURE_2D, m_TextureId);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, image.width, image.height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, image.data);*/
+            const std::vector<ChunkBin::ImageData>& images = bin->GetImages();
+            
+            m_TextureIds.resize(images.size());
+            glGenTextures(static_cast<GLsizei>(images.size()), m_TextureIds.data());
+            
+            for (unsigned int i = 0; i < images.size(); i++)
+            {
+                const ChunkBin::ImageData& image = images[i];
+                const GLuint& textureId = m_TextureIds[i];
+                
+                glBindTexture(GL_TEXTURE_2D, textureId);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+                glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.data);
+            }
+            
+            glBindTexture(GL_TEXTURE_2D, 0);
         }
-    }
-    else
-    {
-        glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(m_Vertices.size()) * static_cast<GLsizeiptr>(sizeof(vec3)), m_Vertices.data(), GL_STATIC_DRAW);
-
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizeiptr>(m_Indices.size()) * static_cast<GLsizeiptr>(sizeof(unsigned int)), m_Indices.data(), GL_STATIC_DRAW);
-    
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(vec3), nullptr);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 4, GL_FLOAT, false, sizeof(vec4), reinterpret_cast<void*>(sizeof(vec3) * 2));
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(2, 4, GL_FLOAT, false, sizeof(vec4), reinterpret_cast<void*>(sizeof(vec3) * 2 + sizeof(vec4)));
-        glEnableVertexAttribArray(2);
     }
 
     // Unbind the VAO
@@ -160,11 +187,13 @@ void Mesh::Draw() const
     if (!m_Loaded)
         return;
 
+    glBindTexture(GL_TEXTURE_2D, m_TextureIds[0]);
     glBindVertexArray(m_Vao);
 
     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_Indices.size()), GL_UNSIGNED_SHORT, nullptr);
 
     glBindVertexArray(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 bool Mesh::IsLoaded() const
@@ -175,48 +204,4 @@ bool Mesh::IsLoaded() const
 void Mesh::LoadGltfFormat(std::ifstream& file, const std::filesystem::path& filepath)
 {
     m_Gltf = new Gltf(file, filepath);
-}
-
-void Mesh::LoadEngineFormat(std::ifstream& file)
-{
-    file.seekg(0);
-
-    int vertexCount;
-    utils::Read(file, vertexCount);
-
-    // Skip the engine's flags
-    file.seekg(sizeof(int) * 2ll, std::ios_base::cur);
-
-    m_Vertices.resize(vertexCount);
-
-    const unsigned int verticesSize = vertexCount * VertexFormatSize;
-    char* vertices = static_cast<char*>(_malloca(verticesSize));
-    file.read(vertices, verticesSize);
-    for (int i = 0; i < vertexCount; i++)
-    {
-        m_Vertices[i] = *reinterpret_cast<vec3*>(vertices + i * VertexFormatSize);
-        std::swap(m_Vertices[i].y, m_Vertices[i].z);
-    }
-    _freea(vertices);
-
-    int partCount;
-    utils::Read(file, partCount);
-
-    for (int i = 0; i < partCount; i++)
-    {
-        int indexCount;
-        utils::Read(file, indexCount);
-
-        const size_t oldIndicesSize = m_Indices.size();
-        m_Indices.resize(m_Indices.size() + indexCount);
-        
-        const unsigned int indicesSize = indexCount * sizeof(unsigned int);
-        char* indices = static_cast<char*>(_malloca(indicesSize));
-        file.read(indices, indicesSize);
-        std::memcpy(reinterpret_cast<char*>(m_Indices.data()) + oldIndicesSize, indices, indicesSize);
-        _freea(indices);
-
-        // Here we should read the material but this mesh doesn't have one so we just skip 4 bytes (material name length == 0)
-        file.seekg(sizeof(int), std::ios_base::cur);
-    }
 }

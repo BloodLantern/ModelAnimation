@@ -1,7 +1,10 @@
 ﻿#pragma once
 
-class vertex
+#include "maths/vector2.hpp"
+#include "maths/vector3.hpp"
+
+struct Vertex
 {
-public:
-    
+    vec3 position;
+    vec2 texCoord;
 };
