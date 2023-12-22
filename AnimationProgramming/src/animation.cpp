@@ -215,9 +215,11 @@ void Animation::ProcessIk(const Vector3& target, const size_t affectedBone)
 		Vector3 right = Vector3::Cross(forward, Vector3::UnitY()).Normalized();
 		Vector3 up = Vector3::Cross(right, forward);
 
+#ifndef NOENGINE
 		EngineExt::DrawLine(Vector3(250.f, 0.f, 0.f), Vector3(250.f, 0.f, 0.f) + forward * 100.f, Vector3(1.f, 0.f, 0.f));
 		EngineExt::DrawLine(Vector3(250.f, 0.f, 0.f), Vector3(250.f, 0.f, 0.f) + right * 100.f, Vector3(0.f, 1.f, 0.f));
 		EngineExt::DrawLine(Vector3(250.f, 0.f, 0.f), Vector3(250.f, 0.f, 0.f) + up * 100.f, Vector3(0.f, 0.f, 1.f));
+#endif
 
 		Matrix4x4 view;
 		Matrix4x4::ViewMatrix(Vector3(0.f), forward, up, view);
