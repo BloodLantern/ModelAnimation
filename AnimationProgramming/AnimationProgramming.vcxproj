@@ -40,37 +40,37 @@
     <ClCompile Include="externals\include\ImGui\imgui_tables.cpp" />
     <ClCompile Include="externals\include\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="src\Engine_extensions.cpp" />
-    <ClCompile Include="src\gltf\accessor_sparse.cpp"/>
-    <ClCompile Include="src\gltf\camera_orthographic.cpp"/>
-    <ClCompile Include="src\gltf\camera_perspective.cpp"/>
+    <ClCompile Include="src\gltf\accessor_sparse.cpp" />
+    <ClCompile Include="src\gltf\camera_orthographic.cpp" />
+    <ClCompile Include="src\gltf\camera_perspective.cpp" />
     <ClCompile Include="src\gltf\chunk_accessor.cpp" />
     <ClCompile Include="src\gltf\chunk_animation.cpp" />
     <ClCompile Include="src\gltf\animation_channel.cpp" />
-    <ClCompile Include="src\gltf\chunk_asset.cpp"/>
-    <ClCompile Include="src\gltf\chunk_camera.cpp"/>
-    <ClCompile Include="src\gltf\chunk_mesh.cpp"/>
-    <ClCompile Include="src\gltf\chunk_node.cpp"/>
-    <ClCompile Include="src\gltf\chunk_sampler.cpp"/>
-    <ClCompile Include="src\gltf\chunk_scene.cpp"/>
-    <ClCompile Include="src\gltf\chunk_skin.cpp"/>
-    <ClCompile Include="src\gltf\chunk_texture.cpp"/>
+    <ClCompile Include="src\gltf\chunk_asset.cpp" />
+    <ClCompile Include="src\gltf\chunk_camera.cpp" />
+    <ClCompile Include="src\gltf\chunk_mesh.cpp" />
+    <ClCompile Include="src\gltf\chunk_node.cpp" />
+    <ClCompile Include="src\gltf\chunk_sampler.cpp" />
+    <ClCompile Include="src\gltf\chunk_scene.cpp" />
+    <ClCompile Include="src\gltf\chunk_skin.cpp" />
+    <ClCompile Include="src\gltf\chunk_texture.cpp" />
     <ClCompile Include="src\gltf\gltf_chunk.cpp" />
-    <ClCompile Include="src\gltf\chunk_buffer.cpp"/>
-    <ClCompile Include="src\gltf\chunk_buffer_view.cpp"/>
-    <ClCompile Include="src\gltf\chunk_image.cpp"/>
-    <ClCompile Include="src\gltf\chunk_material.cpp"/>
-    <ClCompile Include="src\gltf\gltf.cpp"/>
-    <ClCompile Include="src\gltf\gltf_chunk_bin.cpp"/>
-    <ClCompile Include="src\gltf\gltf_chunk_json.cpp"/>
-    <ClCompile Include="src\gltf\material_material_pbr_metallic_roughness.cpp"/>
-    <ClCompile Include="src\gltf\material_normal_texture_info.cpp"/>
-    <ClCompile Include="src\gltf\material_occlusion_texture_info.cpp"/>
-    <ClCompile Include="src\gltf\material_texture_info.cpp"/>
+    <ClCompile Include="src\gltf\chunk_buffer.cpp" />
+    <ClCompile Include="src\gltf\chunk_buffer_view.cpp" />
+    <ClCompile Include="src\gltf\chunk_image.cpp" />
+    <ClCompile Include="src\gltf\chunk_material.cpp" />
+    <ClCompile Include="src\gltf\gltf.cpp" />
+    <ClCompile Include="src\gltf\gltf_chunk_bin.cpp" />
+    <ClCompile Include="src\gltf\gltf_chunk_json.cpp" />
+    <ClCompile Include="src\gltf\material_material_pbr_metallic_roughness.cpp" />
+    <ClCompile Include="src\gltf\material_normal_texture_info.cpp" />
+    <ClCompile Include="src\gltf\material_occlusion_texture_info.cpp" />
+    <ClCompile Include="src\gltf\material_texture_info.cpp" />
     <ClCompile Include="src\gltf\animation_sampler.cpp" />
     <ClCompile Include="src\gltf\channel_target.cpp" />
-    <ClCompile Include="src\gltf\mesh_primitive.cpp"/>
-    <ClCompile Include="src\gltf\sparse_indices.cpp"/>
-    <ClCompile Include="src\gltf\sparse_values.cpp"/>
+    <ClCompile Include="src\gltf\mesh_primitive.cpp" />
+    <ClCompile Include="src\gltf\sparse_indices.cpp" />
+    <ClCompile Include="src\gltf\sparse_values.cpp" />
     <ClCompile Include="src\key_frame.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mesh.cpp" />
@@ -247,7 +247,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level2</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>RAPIDJSON_NOMEMBERITERATORCLASS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>RAPIDJSON_NOMEMBERITERATORCLASS;WIN32;_DEBUG;_CONSOLE;STB_IMAGE_IMPLEMENTATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)externals\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpplatest</LanguageStandard>

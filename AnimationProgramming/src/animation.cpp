@@ -12,12 +12,16 @@ Animation::Animation(std::string&& name, const size_t keyCount, Skeleton* skelet
 	, m_FrameDuration(1.f / (float) m_Framerate)
 	, m_Duration((float) keyCount * m_FrameDuration)
 {
+	// Allocate for every key frame
 	m_KeyFrames.resize(keyCount);
 
 	const size_t boneCount = skeleton->GetBoneCount();
 
 	for (size_t i = 0; i < keyCount; i++)
+	{
+		// Allocate for every bone for every key frame
 		m_KeyFrames[i].resize(boneCount);
+	}
 
 	m_LastKeyFrames = m_KeyFrames[0];
 
@@ -68,22 +72,23 @@ void Animation::UpdateTime(const float deltaTime)
 	if (Paused)
 		return;
 
+	// Update time, loop back to 0 if over duration
 	m_Time += deltaTime * Speed;
 	m_Time = std::fmodf(m_Time, m_Duration);
 
+	// Get last frame
 	const size_t lastFrame = CurrentFrame;
+
+	// Round to get the current frame
 	CurrentFrame = (size_t)(m_Time / m_FrameDuration);
 
-	if (Speed >= 0.f)
+	if (Speed < 0.f && m_Time <= 0)
 	{
-		m_Time = std::fmodf(m_Time, m_Duration);
-	}
-	else
-	{
-		if (m_Time <= 0)
-			m_Time = m_Duration - m_FrameDuration;
+		// Loop back to end of the animation if playing backwards and time is negative
+		m_Time = m_Duration;
 	}
 
+	// Check update last key frames for interpolation
 	if (lastFrame != CurrentFrame)
 		m_LastKeyFrames = m_KeyFrames[lastFrame];
 }
@@ -91,17 +96,23 @@ void Animation::UpdateTime(const float deltaTime)
 float Animation::GetBlendTime(const float deltaTime)
 {
 	if (!m_IsCrossFadeAuto)
+	{
+		// Cross fade isn't auto, so this is a mixed play, hence the blend t is the max value
 		return m_CrossFadeAlphaMax;
+	}
 	
+	// Update timer
 	m_CrossFadeAlpha += deltaTime;
 
 	if (m_CrossFadeAlpha > m_CrossFadeAlphaMax)
 	{
+		// Reset timer and clear target
 		m_CrossFadeAlphaMax = -1.f;
 		m_BlendTarget = nullptr;
 		return 1.f;
 	}
 
+	// Normalize timer for t
 	return m_CrossFadeAlpha / m_CrossFadeAlphaMax;
 }
 
