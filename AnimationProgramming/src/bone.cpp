@@ -74,7 +74,7 @@ _NODISCARD std::vector<Bone*>& Bone::GetChildren()
 	return m_Children;
 }
 
-const int Bone::GetParentIndex() const
+int Bone::GetParentIndex() const
 {
 	return m_ParentIndex;
 }

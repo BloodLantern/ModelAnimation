@@ -136,7 +136,7 @@ void Mesh::Forward()
         {
             const std::vector<ChunkBin::AccessorBuffer>& accessorBuffers = bin->GetAccessorBuffers();
             
-            for (const auto& accessor : accessorBuffers)
+            for (const ChunkBin::AccessorBuffer& accessor : accessorBuffers)
             {
                 if (accessor.accessor->name == "POSITION")
                 {
@@ -204,4 +204,31 @@ bool Mesh::IsLoaded() const
 void Mesh::LoadGltfFormat(std::ifstream& file, const std::filesystem::path& filepath)
 {
     m_Gltf = new Gltf(file, filepath);
+
+    // Couldn't finish animating the mesh in time
+    /*const ChunkBin* bin = m_Gltf->GetBinaryChunk();
+
+    const std::vector<ChunkBin::MeshData>& meshDatas = bin->GetMeshes();
+
+    if (meshDatas.size() > 1)
+        std::cout << "Currently cannot load more than one mesh in a single glTF file\n";
+
+    const ChunkBin::MeshData& meshData = meshDatas[0];
+
+    const std::vector<ChunkBin::MeshPrimitiveData>& meshPrimitiveDatas = meshData.primitives;
+
+    if (meshPrimitiveDatas.size() > 1)
+        std::cout << "Currently cannot load more than one primitive in a single glTF mesh\n";
+
+    const ChunkBin::MeshPrimitiveData& meshPrimitiveData = meshPrimitiveDatas[0];
+
+    const std::vector<ChunkBin::BufferView>& bufferViews = bin->GetBufferViews();
+
+    const std::vector<ChunkBin::AccessorBuffer>& accessorBuffers = bin->GetAccessorBuffers();
+
+    unsigned int index = meshPrimitiveData.attributes.at("JOINTS_0");
+    
+    const ChunkAccessor* accessor = accessorBuffers[index].accessor;
+
+    const ChunkBufferView* bufferView = bufferViews[index].bufferView;*/
 }

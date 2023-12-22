@@ -6,6 +6,7 @@
 
 #include <vector>
 
+#include "skeleton.h"
 #include "vertex.h"
 #include "gltf/gltf.h"
 
@@ -20,6 +21,8 @@ class Mesh
     std::vector<GLuint> m_TextureIds;
 
     Gltf* m_Gltf = nullptr;
+
+    Skeleton m_Skeleton;
     
 public:
     Mesh() = default;

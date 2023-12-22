@@ -9,7 +9,6 @@
 
 class Bone
 {
-private:
 	Bone* m_Parent;
 	int m_ParentIndex;
 	int m_Index;
@@ -39,7 +38,7 @@ public:
 	void ComputeMatrices();
 
 	_NODISCARD std::vector<Bone*>& GetChildren();
-	_NODISCARD const int GetParentIndex() const;
+	_NODISCARD int GetParentIndex() const;
 	_NODISCARD const std::string& GetName() const;
 	_NODISCARD const Matrix4x4& GetLocalTransform() const;
 	_NODISCARD const Matrix4x4& GetGlobalTransform() const;
