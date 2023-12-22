@@ -7,4 +7,6 @@ ChunkAnimation::ChunkAnimation(const rapidjson::Value& value)
     utils::SetFromJsonArrayClass(VAR_AND_NAME(channels), value);
     
     utils::SetFromJsonArrayClass(VAR_AND_NAME(samplers), value);
+
+    utils::SetFromJsonSafe(VAR_AND_NAME(name), value);
 }

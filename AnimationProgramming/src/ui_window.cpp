@@ -140,12 +140,6 @@ void UiWindow::Main()
 		Matrix4x4::PerspectiveProjectionMatrix(std::numbers::pi_v<float> / 2.f, 16.f / 9.f, 0.01f, 1000.f, projection);
 		m_Shader->SetUniform("projectionMatrix", projection);
 
-		if (m_Skeleton->GetBoneCount() > 0)
-		{
-			for (int i = 0; i < 64; i++)
-				m_Shader->SetUniform(std::string("skin[") + std::to_string(i) + "]", m_Skeleton->GetBone(i).GetGlobalTransform());
-		}
-
 		m_Shader->Use();
 		m_Mesh->Draw();
 #endif

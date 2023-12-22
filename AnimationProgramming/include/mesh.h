@@ -6,12 +6,17 @@
 
 #include <vector>
 
+#include "gltf/gltf.h"
+
 class Mesh
 {
     std::vector<vec3> m_Vertices;
-    std::vector<unsigned int> m_Indices;
+    std::vector<unsigned short> m_Indices;
     bool m_Loaded = false;
     GLuint m_Vbo, m_Ebo, m_Vao;
+    GLuint m_TextureId;
+
+    Gltf* m_Gltf = nullptr;
     
 public:
     Mesh() = default;
@@ -28,6 +33,6 @@ public:
     _NODISCARD bool IsLoaded() const;
     
 private:
-    void LoadGltfFormat(std::ifstream& file);
+    void LoadGltfFormat(std::ifstream& file, const std::filesystem::path& filepath);
     void LoadEngineFormat(std::ifstream& file);
 };

@@ -19,11 +19,15 @@
 
 class Chunk
 {
-public:
-    unsigned int length;
-    char type[4];
+protected:
+    unsigned int m_Length;
 
+    char m_Type[4];
+    
+public:
     Chunk() = default;
     
     explicit Chunk(unsigned int length, char type[4]);
+
+    _NODISCARD unsigned int GetLength() const;
 };

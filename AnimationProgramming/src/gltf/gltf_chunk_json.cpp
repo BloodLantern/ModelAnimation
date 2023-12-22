@@ -7,6 +7,10 @@ ChunkJson::ChunkJson(const unsigned int length, char type[4], std::ifstream& fil
 {
     std::string data;
     utils::Read(file, data, length);
+
+    // Padding
+    while (file.peek() == ' ')
+        file.get();
     
     rapidjson::Document json;
     json.Parse(data.c_str());
