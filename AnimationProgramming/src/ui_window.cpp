@@ -109,6 +109,10 @@ void UiWindow::Main()
 	m_Shader = new Shader("Resources", "shader.vs", "shader.fs");
 #endif
 
+	Vector3 rotation = Vector3(0.f, 3.14f, 0.f);
+
+	glEnable(GL_DEPTH_TEST);
+
 	// Show window
 	glfwShowWindow(window);
 #ifndef NOENGINE
@@ -127,15 +131,19 @@ void UiWindow::Main()
 		glfwGetWindowPos(window, &m_WindowX, &m_WindowY);
 
 		glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
+		ImGui::SliderAngle("Rotation X", &rotation.x);
+		ImGui::SliderAngle("Rotation Y", &rotation.y);
+		ImGui::SliderAngle("Rotation Z", &rotation.z);
+
 #ifdef NOENGINE
-		m_Shader->SetUniform("modelViewMatrix", Matrix4x4::TRS(vec3(0.f, -5.f, 10.f), vec3(0.f), 0.05f));
+		m_Shader->SetUniform("modelViewMatrix", Matrix4x4::TRS(vec3(0.f, -5.f, 10.f), rotation, 0.05f));
 		Matrix4x4 projection;
 		Matrix4x4::PerspectiveProjectionMatrix(std::numbers::pi_v<float> / 2.f, 16.f / 9.f, 0.01f, 1000.f, projection);
 		m_Shader->SetUniform("projectionMatrix", projection);
